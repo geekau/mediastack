@@ -6,7 +6,7 @@ https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-
 Ultimate Starter - (PAGE 2) - Jellyfin, Jellyseerr, SABnzbd, Torrents and *ARR Media Library Stack
 https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
 
-You can then use the above guides to configure the configuration settings for each of the applications - they are mostly cut-and-paste, to help simplify and speed up the configuration for relatively inexperienced users.
+You can then use the above guides to configure the settings for each of the applications - they are mostly cut-and-paste, to help simplify and speed up the configuration for relatively inexperienced users.
 
 This guide will cover all the steps needed to initially install and configure a secure docker hosted media environment, with all the applications needed to download torrents and Usenet content which you have a right to use in your media library, and allow you to stream the media via a simple web browser, and even stream the media to your Smart TV / Apple TV apps around the house.
 
