@@ -24,11 +24,11 @@ To get up and running quickly, update the variables below to suit your envirionm
 
  - Host Data Folders - Will accept Linux, Windows, NAS folders...
 
-FOLDER_FOR_DOCKER_DATA=  <-- This stores persistent configuration settings for all the applications
-FOLDER_FOR_MEDIA=        <-- Use same partition / volume for these file locations
-FOLDER_FOR_TORRENTS=     <-- Use same partition / volume for these file locations
-FOLDER_FOR_USENET=       <-- Use same partition / volume for these file locations
-FOLDER_FOR_WATCH=        <-- Use same partition / volume for these file locations
+FOLDER_FOR_DOCKER_DATA=  <-- This stores persistent configuration settings for all the applications.
+FOLDER_FOR_MEDIA=        <-- Use same partition / volume for these file locations.
+FOLDER_FOR_TORRENTS=     <-- Use same partition / volume for these file locations.
+FOLDER_FOR_USENET=       <-- Use same partition / volume for these file locations.
+FOLDER_FOR_WATCH=        <-- Use same partition / volume for these file locations.
 
 PUID=
 PGID=
@@ -53,7 +53,7 @@ docker-compose --file docker-compose-media-stack.yaml --project-name media-stack
 
 Port numbers can be changed at the bottom of the ENV file, the default connect ports are:
 
- - Jellyfin(Media Player)
+ - Jellyfin (Media Player)
 		- http://localhost:8096
  - Jellyseerr (Content Request Management)
 		- http://localhost:5055
