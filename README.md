@@ -25,7 +25,7 @@ To get up and running quickly, update the variables below to suit your envirionm
  - Host Data Folders - Will accept Linux, Windows, NAS folders...
 
 FOLDER_FOR_DOCKER_DATA=  <-- This stores persistent configuration settings for all the applications
-FOLDER_FOR_MEDIA=		 <-- Use same partition / volume for these file locations
+FOLDER_FOR_MEDIA=        <-- Use same partition / volume for these file locations
 FOLDER_FOR_TORRENTS=     <-- Use same partition / volume for these file locations
 FOLDER_FOR_USENET=       <-- Use same partition / volume for these file locations
 FOLDER_FOR_WATCH=        <-- Use same partition / volume for these file locations
@@ -43,7 +43,7 @@ VPN_PASSWORD=
 SERVER_REGION=
 
 
-On the Docker host computer where the FOLDER_FOR_ folder locations are, follow the guide and create all the sub-folders and user permissions for each of these locations.
+On the Docker host computer where the FOLDER_FOR_ folder locations are, follow the above guides and create all the sub-folders and user permissions for each of these locations.
 
 The Docker-Compose file is now ready to build...
 
@@ -51,17 +51,28 @@ Execute:
 docker-compose --file docker-compose-media-stack.yaml --project-name media-stack --env-file docker-compose-media-stack.env up -d
 
 
-Port numbers can be changed at the bottom of the ENV file.
+Port numbers can be changed at the bottom of the ENV file, the default connect ports are:
 
- - http://localhost:8096     Jellyfin     (Media Player)
- - http://localhost:5055     Jellyseerr   (Content Request Management)
- - http://localhost:8686     Lidarr       (Library Manager - Music)
- - http://localhost:8090     Mylar3       (Library Manager - Comics)
- - http://localhost:9696     Prowlarr     (Index and Search Management)
- - http://localhost:7878     Radarr       (Library Manager - Movies)
- - http://localhost:8787     Readarr      (Library Manager - Books)
- - http://localhost:8100     SABnzbd      (Library Manager - TV Shows)
- - http://localhost:8989     Sonarr       (Library Manager - TV Shows)
- - http://localhost:8200     qBittorrent  (Downloader - Torrents)
- - http://localhost:6969     Whisparr     (Library Manager - XXX)
+ - Jellyfin(Media Player)
+		- http://localhost:8096
+ - Jellyseerr (Content Request Management)
+		- http://localhost:5055
+ - Lidarr (Library Manager - Music)
+        - http://localhost:8686
+ - Mylar3 (Library Manager - Comics)
+		- http://localhost:8090
+ - Prowlarr (Index and Search Management)
+		- http://localhost:9696
+ - Radarr (Library Manager - Movies)
+		- http://localhost:7878
+ - Readarr (Library Manager - Books)
+		- http://localhost:8787
+ - SABnzbd (Downloader - Usenet)
+		- http://localhost:8100
+ - Sonarr (Library Manager - TV Shows)
+		- http://localhost:8989
+ - qBittorrent (Downloader - Torrents)
+		- http://localhost:8200
+ - Whisparr (Library Manager - XXX)
+		- http://localhost:6969
 
