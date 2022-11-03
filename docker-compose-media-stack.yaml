@@ -1,0 +1,261 @@
+#
+##################################################################
+#
+#    Full Docker Compose Jellyfin Media Stack, by geekau
+#
+#    This is the main docker-compose file, only update these
+#    settings if you know what you're doing, you should make
+#    all changes in the supporting ENV environment file.
+#
+#    If you are editing this in Portainer, you will see the
+#    all the environment variables below; you can edit there.
+#
+##################################################################
+#
+
+version: "3.6"
+
+networks:
+  media_network:
+    name: media_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: ${DOCKER_SUBNET:?err}
+        gateway: ${DOCKER_GATEWAY:?err}
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "8888:8888/tcp"                         # Local Network HTTP proxy
+      - "8388:8388/tcp"                         # Local Network Shadowsocks
+      - "8388:8388/udp"                         # Local Network Shadowsocks
+      - "${QBIT_PORT_TCP:?err}:6881/tcp"        # Transmission Torrent Port TCP
+      - "${QBIT_PORT_UDP:?err}:6881/udp"        # Transmission Torrent Port UDP
+      - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
+      - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
+      - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
+      - "${WEBUI_PORT_MYLAR3:?err}:8090"        # WebUI Portal: Mylar3
+      - "${WEBUI_PORT_PROWLARR:?err}:9696"      # WebUI Portal: Prowlarr
+      - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"      # WebUI Portal: qBittorrent
+      - "${WEBUI_PORT_RADARR:?err}:7878"        # WebUI Portal: Radarr
+      - "${WEBUI_PORT_READARR:?err}:8787"       # WebUI Portal: Readarr
+      - "${WEBUI_PORT_SABNZBD:?err}:8080"       # WebUI Portal: SABnzbd
+      - "${WEBUI_PORT_SONARR:?err}:8989"        # WebUI Portal: Sonarr
+      - "${WEBUI_PORT_WHISPARR:?err}:6969"      # WebUI Portal: Whisparr
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/gluetun:/gluetun
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
+      - OPENVPN_USER=${VPN_USERNAME:?err}
+      - OPENVPN_PASSWORD=${VPN_PASSWORD:?err}
+      - SERVER_REGION=${SERVER_REGION:?err}
+      - SERVER_CITIES=${SERVER_CITIES}
+      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
+      - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
+      - VPN_TYPE=${VPN_TYPE}
+      - VPN_ENDPOINT_IP=${VPN_ENDPOINT_IP}
+      - VPN_ENDPOINT_PORT=${VPN_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - HTTPPROXY=on
+      - SHADOWSOCKS=on
+    networks:
+      - media_network
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+#    devices:
+#      Documentation: https://jellyfin.org/docs/general/administration/hardware-acceleration/
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyfin:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "service:gluetun"
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyseerr:/app/config
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "service:gluetun"
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/lidarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  mylar:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/mylar:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:mylar3
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/prowlarr:/config
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:prowlarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/qbittorrent:/config
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_WATCH:?err}:/data/watch
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - WEBUI_PORT=${WEBUI_PORT_QBITTORRENT:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/radarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/readarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/sabnzbd:/config
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+      - ${FOLDER_FOR_WATCH:?err}:/data/watch
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sabnzbd
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/sonarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  whisparr:
+    image: hotio/whisparr:nightly
+    container_name: whisparr
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/whisparr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "service:gluetun"
