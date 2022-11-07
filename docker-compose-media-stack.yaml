@@ -40,6 +40,7 @@ services:
       - "8388:8388/udp"                         # Local Network Shadowsocks
       - "${QBIT_PORT_TCP:?err}:6881/tcp"        # Transmission Torrent Port TCP
       - "${QBIT_PORT_UDP:?err}:6881/udp"        # Transmission Torrent Port UDP
+      - "${FLARESOLVERR_PORT:?err}:8191"        # FlareSolverr Port TCP
       - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
       - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
       - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
@@ -77,12 +78,24 @@ services:
     networks:
       - media_network
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "service:gluetun"
+
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     restart: unless-stopped
 #    devices:
 #      Documentation: https://jellyfin.org/docs/general/administration/hardware-acceleration/
+#      - /dev/dri:/dev/dri
 #      - /dev/dri/renderD128:/dev/dri/renderD128
 #      - /dev/dri/card0:/dev/dri/card0
     volumes:
@@ -102,9 +115,6 @@ services:
     volumes:
       - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyseerr:/app/config
     environment:
-      - PUID=${PUID:?err}
-      - PGID=${PGID:?err}
-      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
     network_mode: "service:gluetun"
 
@@ -120,14 +130,15 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
       - TP_THEME=${TP_THEME:?err}
     network_mode: "service:gluetun"
 
-  mylar:
+  mylar3:
     image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar
+    container_name: mylar3
     restart: unless-stopped
     volumes:
       - ${FOLDER_FOR_DOCKER_DATA:?err}/mylar:/config
@@ -151,6 +162,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:prowlarr
       - TP_THEME=${TP_THEME:?err}
@@ -188,6 +200,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
       - TP_THEME=${TP_THEME:?err}
@@ -205,6 +218,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
       - TP_THEME=${TP_THEME:?err}
@@ -223,6 +237,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:sabnzbd
       - TP_THEME=${TP_THEME:?err}
@@ -240,9 +255,26 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
       - TP_THEME=${TP_THEME:?err}
+    network_mode: "service:gluetun"
+
+  unpackerr:
+    image: cr.hotio.dev/hotio/unpackerr
+    container_name: unpackerr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/unpackerr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
     network_mode: "service:gluetun"
 
   whisparr:
