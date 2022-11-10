@@ -1,0 +1,42 @@
+########################################################################
+########################################################################
+##
+##  Docker Compose File: Jellyfin (LinuxServer.io)
+##  Function: Media Server
+##
+##  Documentation: https://jellyfin.org/docs/general/administration/installing#docker
+##  https://jellyfin.org/docs/general/administration/hardware-acceleration/
+##
+########################################################################
+########################################################################
+version: "3.7"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyfin:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - JELLYFIN_PublishedServerUrl=${LOCAL_DOCKER_IP:?err}  ## Optional for DLNA
+
+# Configure VPN / Direct Internet access below. You will also need to make change in the Gluetun VPN Container
+
+    network_mode: "container:gluetun"                        ## Disable to bypass Gluetun VPN for Internet traffic
+#    ports:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
+#      - "${WEBUI_PORT_JELLYFIN:?err}:8096"                  ## Enable  to bypass Gluetun VPN for Internet traffic
+#      - 7359:7359/udp                                       ## Enable  for DLNA (Won't work with VPN connection)
+#      - 1900:1900/udp                                       ## Enable  for DLNA (Won't work with VPN connection)
+#networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
+#  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

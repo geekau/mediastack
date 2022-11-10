@@ -1,0 +1,84 @@
+########################################################################
+########################################################################
+##
+##  Docker Compose File: Gluetun (qmcgaw)
+##  Function: VPN Client
+##
+##  Documentation: https://github.com/qdm12/gluetun/wiki
+##
+########################################################################
+########################################################################
+version: "3.7"
+
+networks:
+  media_network:
+    name: media_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: ${DOCKER_SUBNET:?err}
+        gateway: ${DOCKER_GATEWAY:?err}
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "8888:8888/tcp"                         # Gluetun Local Network HTTP proxy
+      - "8388:8388/tcp"                         # Gluetun Local Network Shadowsocks
+      - "8388:8388/udp"                         # Gluetun Local Network Shadowsocks
+
+# Comment out lines below if they are not going to use Gluetun VPN for Internet connection:
+
+      - "${QBIT_PORT_TCP:?err}:6881/tcp"        # Transmission Torrent Port TCP
+      - "${QBIT_PORT_UDP:?err}:6881/udp"        # Transmission Torrent Port UDP
+      - "${FLARESOLVERR_PORT:?err}:8191"        # WebUI Portal: FlareSolverr
+
+      - "${TDARR_SERVER_PORT:?err}:${TDARR_SERVER_PORT:?err}"   # Tdarr: Server Port
+      - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
+
+      - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
+      - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
+      - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
+      - "${WEBUI_PORT_MYLAR3:?err}:8090"        # WebUI Portal: Mylar3
+      - "${WEBUI_PORT_PROWLARR:?err}:9696"      # WebUI Portal: Prowlarr
+      - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"   # WebUI Portal: qBittorrent
+      - "${WEBUI_PORT_RADARR:?err}:7878"        # WebUI Portal: Radarr
+      - "${WEBUI_PORT_READARR:?err}:8787"       # WebUI Portal: Readarr
+      - "${WEBUI_PORT_SABNZBD:?err}:8080"       # WebUI Portal: SABnzbd
+      - "${WEBUI_PORT_SONARR:?err}:8989"        # WebUI Portal: Sonarr
+      - "${WEBUI_PORT_WHISPARR:?err}:6969"      # WebUI Portal: Whisparr
+    volumes:
+      - ${FOLDER_FOR_DOCKER_DATA:?err}/gluetun:/gluetun
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
+      - OPENVPN_USER=${VPN_USERNAME:?err}
+      - OPENVPN_PASSWORD=${VPN_PASSWORD:?err}
+      - SERVER_REGION=${SERVER_REGION:?err}
+      - SERVER_CITIES=${SERVER_CITIES}
+      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
+      - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
+      - VPN_TYPE=${VPN_TYPE}
+      - VPN_ENDPOINT_IP=${VPN_ENDPOINT_IP}
+      - VPN_ENDPOINT_PORT=${VPN_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - HTTPPROXY=on
+      - SHADOWSOCKS=on
+
+# Do not change networking, Gluetun creates the Docker "media_network",
+# and controls traffic out through the VPN link
+    networks:
+      - media_network
