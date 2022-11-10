@@ -9,16 +9,20 @@ Change "**D:/Storage**" to suit your needs, however use the same disk as the ori
 
 
 **Filebot Renaming Preset String for Series / TV Shows:**
+```
 D:/Storage/renaming/series/{ny.colon(' - ').ascii()} [tmdbid-{id}]/Season {s00}/{ny.colon(' - ').ascii()} {s00e00} - {t.ascii()} {" - $hd $vf $vc $ac"}
-
+```
 
 **Filebot Renaming Preset String for Movies / Adult:**
+```
 D:/Storage/renaming/movies/{ny.colon(' - ').ascii()} [imdbid-{imdbid}]/{ny.colon(' - ').ascii()} {" - $hd $vf $vc $ac"}
+```
 
 
 **Filebot Renaming Preset String for Music / Audio:**
+```
 D:/Storage/renaming/music/{artist.upperInitial().ascii()}/{album.upperInitial().ascii()} ({y})/{albumArtist.upperInitial().ascii()} - {album.upperInitial().ascii()} - {pi.pad(3)+' - '} {t.ascii()}
-
+```
 
 ## 2 - Download and edit the "docker-compose.env" file, and update the following sets of variables to suit your requirements.
 
@@ -112,7 +116,7 @@ docker run -d \
 
 ## 5 - Install the Docker applications individually as you need them.
 
-> **NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (media_network).
+>**NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (media_network).
 
 
 ### Deploy VPN and Internal Docker Bridge "media_network":
