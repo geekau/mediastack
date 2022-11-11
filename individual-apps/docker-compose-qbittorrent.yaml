@@ -17,8 +17,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${FOLDER_FOR_DOCKER_DATA:?err}/qbittorrent:/config
-      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
-      - ${FOLDER_FOR_WATCH:?err}:/data/watch
+      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents  #put the watch folder in this folder. Though, why use a watch folder?
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
