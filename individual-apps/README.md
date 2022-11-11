@@ -1,12 +1,14 @@
-# Docker Media Stack
 
-These Docker Compose configurations will help you rapidly deploy all the applications you need in a Docker stack, to operate a Jellyfin, Jellyseerr, Torrent, Usenet, \*ARR Media Library Managers, Reverse Proxy, MFA Authenticated Access, and Tdarr Automated Media Transcoding enabled media stack.
+# Docker Media Stack
+>You can download these individual files easily, by going to https://github.com/geekau/media-stack then selecting "Code" --> "Download Zip".
+
+These Docker Compose configurations will help you rapidly deploy all the applications you need in a Docker stack, to operate a Jellyfin, Jellyseerr, Torrent, Usenet, \*ARR Media Library Managers, Reverse Proxy, MFA Authenticated Access, and Tdarr Automated Media Transcoding enabled media stack, and has been thoroughly testing on Linux, Windows and Synology NAS servers.
 
 ## 1 - Prepare / rename media library if needed:
 If you are setting up your media server and media libraries for the very first time, or your media is very poorly named, it is recommended you use Filebot with the following naming standards below, to initially sort all of your media. Otherwise the Media Library Managers and Jellyfin may not be able to identify your media titles, media art, and subtitles, if the original filenames are of a poor standard.
 
-Change "**D:/Storage**" to suit your needs, however use the same disk as the original media, so it is renamed quickly, instead of copied to a different disk or network; this could take a great deal of time to complete depending on size of the libraries / media you are renaming.
-
+Change "**D:/Storage**" to suit your needs, however use the same disk as the original media, so it is renamed quickly in place, rather than copied to a different disk or network; this could take a great deal of time to complete depending on size of the libraries / media you are renaming.
+>This can be skipped if you have a well organised / structure media library already.
 
 **Filebot Renaming Preset String for Series / TV Shows:**
 ```
@@ -17,7 +19,6 @@ D:/Storage/renaming/series/{ny.colon(' - ').ascii()} [tmdbid-{id}]/Season {s00}/
 ```
 D:/Storage/renaming/movies/{ny.colon(' - ').ascii()} [imdbid-{imdbid}]/{ny.colon(' - ').ascii()} {" - $hd $vf $vc $ac"}
 ```
-
 
 **Filebot Renaming Preset String for Music / Audio:**
 ```
@@ -31,17 +32,17 @@ Add the folder locations to the ENV file, where all of your docker / media / dow
 >You will need to create the folders, or make sure they already exist.
 >Valid choices are Linux, Windows or NAS folder naming conventions.
 ```
-FOLDER_FOR_DOCKER_DATA=/home/ubuntu/docker
-FOLDER_FOR_MEDIA=/home/ubuntu/media        <-- These 4 folders need to be on same disk partition / volume
-FOLDER_FOR_TORRENTS=/home/ubuntu/torrents  <-- These 4 folders need to be on same disk partition / volume
-FOLDER_FOR_USENET=/home/ubuntu/usenet      <-- These 4 folders need to be on same disk partition / volume
-FOLDER_FOR_WATCH=/home/ubuntu/watch        <-- These 4 folders need to be on same disk partition / volume
+FOLDER_FOR_DOCKER_DATA=/home/geekau/docker
+FOLDER_FOR_MEDIA=/home/geekau/media        <-- These 4 folders need to be on same disk partition / volume
+FOLDER_FOR_TORRENTS=/home/geekau/torrents  <-- These 4 folders need to be on same disk partition / volume
+FOLDER_FOR_USENET=/home/geekau/usenet      <-- These 4 folders need to be on same disk partition / volume
+FOLDER_FOR_WATCH=/home/geekau/watch        <-- These 4 folders need to be on same disk partition / volume
 ```
 
 ### At Linux / Synology terminal, use the "id" command to identify user ID and group ID.
 ```
-sudo id ubuntu
-uid=1000(ubuntu) gid=1000(ubuntu) groups=1000(ubuntu)
+sudo id geekau
+uid=1000(geekau) gid=1000(geekau) groups=1000(geekau)
 ```
 Update the ENV file with these details:
 ```
@@ -60,39 +61,39 @@ VPN_PASSWORD=<password from VPN provider>
 SERVER_REGION=<regions supported by VPN provider>
 ```
 
-## 3 - Set up all of the folders / subfolders / permissions:
+## 3 - Set up all of the folders / subfolders:
 ### These should match the FOLDER_FOR choices you used above
 The commands suit the folders defined above in ENV file... i.e. FOLDER_FOR_DOCKER_DATA, FOLDER_FOR_MEDIA, FOLDER_FOR_TORRENTS etc... Update the script to your needs.
 
 ### For Linux commands:
 If you used the following Linux folders in the ENV file:
 ```
-FOLDER_FOR_DOCKER_DATA=/home/ubuntu/docker
-FOLDER_FOR_MEDIA=/home/ubuntu/media
-FOLDER_FOR_TORRENTS=/home/ubuntu/torrents
-FOLDER_FOR_USENET=/home/ubuntu/usenet
-FOLDER_FOR_WATCH=/home/ubuntu/watch
+FOLDER_FOR_DOCKER_DATA=/home/geekau/docker
+FOLDER_FOR_MEDIA=/home/geekau/media         <-- Use same partition / volume
+FOLDER_FOR_TORRENTS=/home/geekau/torrents   <-- Use same partition / volume
+FOLDER_FOR_USENET=/home/geekau/usenet       <-- Use same partition / volume
+FOLDER_FOR_WATCH=/home/geekau/watch         <-- Use same partition / volume
 ```
-The you would create all of the necessary folders using the following commands:
+Then you would create all of the necessary folders using the following commands:
 ```
-sudo mkdir -p /home/ubuntu/docker/{gluetun,jellyfin,jellyseerr,lidarr,mylar,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr,tdarr_transcode_cache,unpackerr,whisparr}
-sudo mkdir -p /home/ubuntu/media/{adult,anime,audio,books,comics,movies,music,photos,podcasts,series,software}
-sudo mkdir -p /home/ubuntu/usenet/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
-sudo mkdir -p /home/ubuntu/torrents/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
-sudo mkdir -p /home/ubuntu/watch
-sudo chmod -R 775 /home/ubuntu/{docker,media,usenet,torrents,watch}
-sudo chown -R ubuntu:ubuntu /home/ubuntu/{docker,media,usenet,torrents,watch}
+sudo mkdir -p /home/geekau/docker/{gluetun,jellyfin,jellyseerr,lidarr,mylar,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr,tdarr_transcode_cache,unpackerr,whisparr}
+sudo mkdir -p /home/geekau/media/{adult,anime,audio,books,comics,movies,music,photos,podcasts,series,software}
+sudo mkdir -p /home/geekau/usenet/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
+sudo mkdir -p /home/geekau/torrents/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
+sudo mkdir -p /home/geekau/watch
+sudo chmod -R 775 /home/geekau/{docker,media,usenet,torrents,watch}
+sudo chown -R geekau:geekau /home/geekau/{docker,media,usenet,torrents,watch}
 ```
 ### For Window commands:
 If you used the following Windows folders in the ENV file:
 ```
 FOLDER_FOR_DOCKER_DATA=D:\Storage\Docker
-FOLDER_FOR_MEDIA=D:\Storage\Media
-FOLDER_FOR_TORRENTS=D:\Storage\Torrents
-FOLDER_FOR_USENET=D:\Storage\Usenet
-FOLDER_FOR_WATCH=D:\Storage\Watch
+FOLDER_FOR_MEDIA=D:\Storage\Media         <-- Use same partition / volume
+FOLDER_FOR_TORRENTS=D:\Storage\Torrents   <-- Use same partition / volume
+FOLDER_FOR_USENET=D:\Storage\Usenet       <-- Use same partition / volume
+FOLDER_FOR_WATCH=D:\Storage\Watch         <-- Use same partition / volume
 ```
-The you would create all of the necessary folders using the following commands:
+Then you would create all of the necessary folders using the following commands:
 ```
 FOR /D %I IN (gluetun jellyfin jellyseerr lidarr mylar prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr tdarr_transcode_cache unpackerr whisparr) DO mkdir D:\Storage\Docker\%I
 FOR /D %I IN (adult anime audio books comics movies music photos podcasts series software) DO mkdir D:\Storage\Media\%I
@@ -101,22 +102,9 @@ FOR /D %I IN (adult anime audio books comics movies music prowlarr podcasts seri
 mkdir D:\Storage\Watch
 ```
 
-## 4 - Optional - Install Portainer to help manage basic administration functions of your Docker containers:
-Portainer should only be used for simple administration
-```
-docker run -d \
-    --name portainer \
-    --restart=always \
-    -p 8000:8000 \
-    -p 9443:9443 \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v /home/ubuntu/docker/portainer:/data \        Change "/home/ubuntu/docker/portainer" to suite "FOLDER_FOR_DOCKER_DATA/portainer"
-    portainer/portainer-ce:latest
-```
+## 4 - Install the Docker applications individually as you need them.
 
-## 5 - Install the Docker applications individually as you need them.
-
->**NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (media_network).
+>**NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (**media_network**).
 
 
 ### Deploy VPN and Internal Docker Bridge "media_network":
@@ -124,15 +112,16 @@ docker run -d \
 sudo docker-compose --file docker-compose-gluetun.yaml --project-name media-stack --env-file docker-compose.env up -d
 ```
 
->**NOTE:**  =="WARNING: Found orphan containers (gluetun, qbittorrent, sabnzbd, prowlarr, prowlarr) for this project"==
+>==**NOTE:**  "WARNING: Found orphan containers (gluetun, qbittorrent, sabnzbd, prowlarr, prowlarr) for this project"==
 
->This WARNING can be safely ignored, as we're loading the project apps one at a time, rather than all in one YAML file.
+>This ==WARNING== can be safely ignored, as we're loading the project apps one at a time, rather than all in one YAML file.
 
-## Deploy Download Clients:
+## Deploy Media Server and Content Request Manager:
 ```
-sudo docker-compose --file docker-compose-qbittorrent.yaml --project-name media-stack --env-file docker-compose.env up -d
-sudo docker-compose --file docker-compose-prowlarr.yaml    --project-name media-stack --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-jellyfin.yaml     --project-name media-stack --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-jellyseerr.yaml   --project-name media-stack --env-file docker-compose.env up -d
 ```
+
 
 ## Deploy Index Manager and Media Library Managers:
 ```
@@ -146,11 +135,12 @@ sudo docker-compose --file docker-compose-whisparr.yaml --project-name media-sta
 ```
 
 
-## Deploy Media Server and Content Request Manager:
+## Deploy Download Clients:
 ```
-sudo docker-compose --file docker-compose-jellyfin.yaml     --project-name media-stack --env-file docker-compose.env up -d
-sudo docker-compose --file docker-compose-jellyseerr.yaml   --project-name media-stack --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-qbittorrent.yaml --project-name media-stack --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-sabnzbd.yaml     --project-name media-stack --env-file docker-compose.env up -d
 ```
+
 
 ## Deploy Archive Unpacker and Automatic Video Re-encoding:
 ```
@@ -158,8 +148,10 @@ sudo docker-compose --file docker-compose-unpackarr.yaml    --project-name media
 sudo docker-compose --file docker-compose-tdarr.yaml        --project-name media-stack --env-file docker-compose.env up -d
 ```
 
+
 ## Deploy Reverse Proxy (with SSL Certbot) and Cloudflare Proxy
-```sudo docker-compose --file docker-compose-swag.yaml         --project-name media-stack --env-file docker-compose.env up -d
+```
+sudo docker-compose --file docker-compose-swag.yaml         --project-name media-stack --env-file docker-compose.env up -d
 sudo docker-compose --file docker-compose-flaresolverr.yaml --project-name media-stack --env-file docker-compose.env up -d
 ```
 
@@ -186,15 +178,24 @@ http://docker-host:8200|qBittorrent|(Downloader - Torrents)
 
 >**NOTE: If the qBittorrent portal fails to load with an error message**, it may be due to the themepark module, this can be resolved by editing "FOLDER_FOR_DOCKER_DATA/qbittorrent/qBittorrent/qBittorrent.conf" and changing "WebUI\AlternativeUIEnabled=true" to "false" and restarting qBittorrent.
 
-## For reverse proxy into your network (from the Internet):
+## For Reverse Proxy into your network (from the Internet):
 
  Portal | Application | Function
 -------- | -------- | --------
 http://your-domain-name.com|SWAG|Reverse Proxy
 https://your-domain-name.com|SWAG|Reverse Proxy
-> Port 80 will be accessible on the Internet, however it will automatically redirect to HTTPS Port 443.
 
-## 6 - Configuring the docker applications after they have been deployed
+The SWAG container provides Nginx Reverse Proxy and MFA running on ports **5080/HTTP** and **5443/HTTPS**, so they don't conflict with other services running on the Docker host computer. To access your Reverse Proxy from the Internet, you need to set up your gateway / router, to allow Internet ports **80** and **443** into your network, but redirect them to the Docker host IP Address on ports **5080** and **5443** respectively.
+
+> Port **80** will be accessible on the Internet and redirected to the Reverse Proxy on port **5080**, however it will automatically redirect to HTTPS protocol using port **443** via the Internet, and then redirect to the Reverse Proxy on port **5443**. Reverse Proxy port numbers can be changed as required in the ENV file if required.
+
+The SWAG container requires a resolvable domain name, and will automatically install SSL certificates using either Let's Encrypt or Zero SSL providers.
+
+ - https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
+
+
+## 5 - Configuring the docker applications after they have been deployed
 Refer to:
-1.	https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.184/
-2.	https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
+ - https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.184/
+ - https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
+
