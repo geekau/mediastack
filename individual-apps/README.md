@@ -1,6 +1,6 @@
 
 # Docker Media Stack
->You can download these individual files easily, by going to https://github.com/geekau/media-stack then selecting "Code" --> "Download Zip".
+>You can download these files easily, by going to https://github.com/geekau/media-stack then selecting "Code" --> "Download Zip".
 
 These Docker Compose configurations will help you rapidly deploy all the applications you need in a Docker stack, to operate a Jellyfin, Jellyseerr, Torrent, Usenet, \*ARR Media Library Managers, Reverse Proxy, MFA Authenticated Access, and Tdarr Automated Media Transcoding enabled media stack, and has been thoroughly testing on Linux, Windows and Synology NAS servers.
 
@@ -8,7 +8,7 @@ These Docker Compose configurations will help you rapidly deploy all the applica
 If you are setting up your media server and media libraries for the very first time, or your media is very poorly named, it is recommended you use Filebot with the following naming standards below, to initially sort all of your media. Otherwise the Media Library Managers and Jellyfin may not be able to identify your media titles, media art, and subtitles, if the original filenames are of a poor standard.
 
 Change "**D:/Storage**" to suit your needs, however use the same disk as the original media, so it is renamed quickly in place, rather than copied to a different disk or network; this could take a great deal of time to complete depending on size of the libraries / media you are renaming.
->This can be skipped if you have a well organised / structure media library already.
+>This can be skipped if you have a well organised / structured media library already.
 
 **Filebot Renaming Preset String for Series / TV Shows:**
 ```
@@ -25,12 +25,11 @@ D:/Storage/renaming/movies/{ny.colon(' - ').ascii()} [imdbid-{imdbid}]/{ny.colon
 D:/Storage/renaming/music/{artist.upperInitial().ascii()}/{album.upperInitial().ascii()} ({y})/{albumArtist.upperInitial().ascii()} - {album.upperInitial().ascii()} - {pi.pad(3)+' - '} {t.ascii()}
 ```
 
-## 2 - Download and edit the "docker-compose.env" file, and update the following sets of variables to suit your requirements.
+## 2 - Edit the "docker-compose.env" file, and update variables to suit your environment.
 
-### Host Data Folders - Will accept Linux, Windows, NAS folder locations
-Add the folder locations to the ENV file, where all of your docker / media / downloads will be stored:
->You will need to create the folders, or make sure they already exist.
->Valid choices are Linux, Windows or NAS folder naming conventions.
+### Docker Host Folders Locations:
+Add the folder locations to the ENV file, where your docker configurations / media / downloads will be stored:
+>Folders need to exist before running "docker-compose" commands. Valid choices are Linux, Windows or NAS folder naming conventions.
 ```
 FOLDER_FOR_DOCKER_DATA=/home/geekau/docker
 FOLDER_FOR_MEDIA=/home/geekau/media        <-- These 4 folders need to be on same disk partition / volume
@@ -46,26 +45,28 @@ uid=1000(geekau) gid=1000(geekau) groups=1000(geekau)
 ```
 Update the ENV file with these details:
 ```
-PUID=1000	<-- Update this value from "id" command
-PGID=1000   <-- Update this value from "id" command
+PUID=1000     <-- Update this value from "id" command
+PGID=1000     <-- Update this value from "id" command
 TIMEZONE=Australia/Brisbane
 ```
 Update your local Timezone using this list: [List of tz database time zones - Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 
 ### Update your VPN Service Provider details for Gluetun to create VPN tunnel.
-Add your VPN service provider details. If you don't have a VPN service provider configure, Gluetun will not establish a secure VPN tunnel, and will not allow any network traffic out onto the Internet.
+Add your VPN service provider details.
+>If you don't have a VPN service provider configured, Gluetun will not establish a secure VPN tunnel, and will not allow any network traffic out onto the Internet.
 ```
 VPN_SERVICE_PROVIDER=VPN provider name
 VPN_USERNAME=<username from VPN provider>
 VPN_PASSWORD=<password from VPN provider>
 SERVER_REGION=<regions supported by VPN provider>
 ```
+==**All containers are initally configured to sit behind the VPN connection for security / privacy. If you want the containers to have direct Internet access, follow the steps in each of the YAML files to change the network configuration, and restart the container.**==
 
 ## 3 - Set up all of the folders / subfolders:
 ### These should match the FOLDER_FOR choices you used above
 The commands suit the folders defined above in ENV file... i.e. FOLDER_FOR_DOCKER_DATA, FOLDER_FOR_MEDIA, FOLDER_FOR_TORRENTS etc... Update the script to your needs.
 
-### For Linux commands:
+### For Linux hosted data folders:
 If you used the following Linux folders in the ENV file:
 ```
 FOLDER_FOR_DOCKER_DATA=/home/geekau/docker
@@ -84,7 +85,7 @@ sudo mkdir -p /home/geekau/watch
 sudo chmod -R 775 /home/geekau/{docker,media,usenet,torrents,watch}
 sudo chown -R geekau:geekau /home/geekau/{docker,media,usenet,torrents,watch}
 ```
-### For Window commands:
+### For Window hosted data folders:
 If you used the following Windows folders in the ENV file:
 ```
 FOLDER_FOR_DOCKER_DATA=D:\Storage\Docker
@@ -104,7 +105,7 @@ mkdir D:\Storage\Watch
 
 ## 4 - Install the Docker applications individually as you need them.
 
->**NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (**media_network**).
+**NOTE: Gluetun MUST be installed as the first container**, as it sets up the VPN and the internal Bridge network the other containers will join (**media_network**).
 
 
 ### Deploy VPN and Internal Docker Bridge "media_network":
@@ -112,9 +113,9 @@ mkdir D:\Storage\Watch
 sudo docker-compose --file docker-compose-gluetun.yaml --project-name media-stack --env-file docker-compose.env up -d
 ```
 
->==**NOTE:**  "WARNING: Found orphan containers (gluetun, qbittorrent, sabnzbd, prowlarr, prowlarr) for this project"==
+==**NOTE:**  "WARNING: Found orphan containers (gluetun, qbittorrent, sabnzbd, prowlarr, prowlarr) for this project"==
 
->This ==WARNING== can be safely ignored, as we're loading the project apps one at a time, rather than all in one YAML file.
+This ==WARNING== can be safely ignored, as we're loading the project apps one at a time, rather than all in one YAML file.
 
 ## Deploy Media Server and Content Request Manager:
 ```
@@ -174,9 +175,10 @@ http://docker-host:8989|Sonarr|(Library Manager - TV Shows)
 http://docker-host:8265|Tdarr|WebUI Automatic Audio/Video Library Transcoding
 http://docker-host:6969|Whisparr|(Library Manager - XXX)
 http://docker-host:8200|qBittorrent|(Downloader - Torrents)
->**Default qBittorrent Portal Access:**     Username: **admin**     Password: **adminadmin**
 
->**NOTE: If the qBittorrent portal fails to load with an error message**, it may be due to the themepark module, this can be resolved by editing "FOLDER_FOR_DOCKER_DATA/qbittorrent/qBittorrent/qBittorrent.conf" and changing "WebUI\AlternativeUIEnabled=true" to "false" and restarting qBittorrent.
+**Default qBittorrent Portal Access:**     Username: **admin**     Password: **adminadmin**
+
+**NOTE: If the qBittorrent portal fails to load with an error message**, it may be due to the themepark module, this can be resolved by editing "FOLDER_FOR_DOCKER_DATA/qbittorrent/qBittorrent/qBittorrent.conf" and changing "WebUI\AlternativeUIEnabled=true" to "false" and restarting qBittorrent.
 
 ## For Reverse Proxy into your network (from the Internet):
 
@@ -187,9 +189,9 @@ https://your-domain-name.com|SWAG|Reverse Proxy
 
 The SWAG container provides Nginx Reverse Proxy and MFA running on ports **5080/HTTP** and **5443/HTTPS**, so they don't conflict with other services running on the Docker host computer. To access your Reverse Proxy from the Internet, you need to set up your gateway / router, to allow Internet ports **80** and **443** into your network, but redirect them to the Docker host IP Address on ports **5080** and **5443** respectively.
 
-> Port **80** will be accessible on the Internet and redirected to the Reverse Proxy on port **5080**, however it will automatically redirect to HTTPS protocol using port **443** via the Internet, and then redirect to the Reverse Proxy on port **5443**. Reverse Proxy port numbers can be changed as required in the ENV file if required.
+Port **80** will be accessible on the Internet and redirected to the Reverse Proxy on port **5080**, however it will redirect to HTTPS protocol using port **443** via the Internet, which will also be redirected to the Reverse Proxy on port **5443**. Reverse Proxy port numbers can be changed as required in the ENV file if required.
 
-The SWAG container requires a resolvable domain name, and will automatically install SSL certificates using either Let's Encrypt or Zero SSL providers.
+The SWAG container requires a resolvable domain name, and will automatically install SSL certificates using either Let's Encrypt or Zero SSL providers, and is also able to provide Multi-Factor Authentication (MFA), to provide strong security for your Internet connected applications.
 
  - https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
 
@@ -199,3 +201,4 @@ Refer to:
  - https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.184/
  - https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
 
+These will be updated further.
