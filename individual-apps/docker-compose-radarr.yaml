@@ -17,9 +17,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${FOLDER_FOR_DOCKER_DATA:?err}/radarr:/config
-      - ${FOLDER_FOR_MEDIA:?err}:/data/media
-      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
-      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+      - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
