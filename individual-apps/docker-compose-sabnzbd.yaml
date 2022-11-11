@@ -17,8 +17,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${FOLDER_FOR_DOCKER_DATA:?err}/sabnzbd:/config
-      - ${FOLDER_FOR_USENET:?err}:/data/usenet
-      - ${FOLDER_FOR_WATCH:?err}:/data/watch
+      - ${FOLDER_FOR_USENET:?err}:/data/usenet #put watch in this folder
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
