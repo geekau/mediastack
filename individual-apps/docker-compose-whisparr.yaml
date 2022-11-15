@@ -15,10 +15,8 @@ services:
     image: hotio/whisparr:nightly
     container_name: whisparr
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/whisparr:/config
-      - ${FOLDER_FOR_MEDIA:?err}:/data/media
-      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
-      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+      - ${FOLDER_FOR_CONFIGS:?err}/whisparr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -32,5 +30,5 @@ services:
 #      - "${WEBUI_PORT_WHISPARR:?err}:6969"                  ## Enable  to bypass Gluetun VPN for Internet traffic
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
 #    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

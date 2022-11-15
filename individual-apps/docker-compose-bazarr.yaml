@@ -1,35 +1,35 @@
 ########################################################################
 ########################################################################
 ##
-##  Docker Compose File: Readarr (LinuxServer.io)
-##  Function: Book Library Manager
+##  Docker Compose File: Bazarr (LinuxServer.io)
+##  Function: Download subtitles for Radarr and Sonarr
 ##
-##  Documentation: https://docs.linuxserver.io/images/docker-readarr
+##  Documentation: https://docs.linuxserver.io/images/docker-bazarr
 ##
 ########################################################################
 ########################################################################
 version: "3.7"
 
 services:
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/readarr:/config
+      - ${FOLDER_FOR_CONFIGS:?err}/bazarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
       - TP_THEME=${TP_THEME:?err}
 
 # Configure VPN / Direct Internet access below. You will also need to make change in the Gluetun VPN Container
 
     network_mode: "container:gluetun"                        ## Disable to bypass Gluetun VPN for Internet traffic
 #    ports:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#      - "${WEBUI_PORT_READARR:?err}:8787"                   ## Enable  to bypass Gluetun VPN for Internet traffic
+#      - "${WEBUI_PORT_BAZARR:?err}:6767"                    ## Enable  to bypass Gluetun VPN for Internet traffic
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
 #    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic

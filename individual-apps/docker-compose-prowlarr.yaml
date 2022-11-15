@@ -16,7 +16,7 @@ services:
     container_name: prowlarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/prowlarr:/config
+      - ${FOLDER_FOR_CONFIGS:?err}/prowlarr:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -31,5 +31,5 @@ services:
 #      - "${WEBUI_PORT_PROWLARR:?err}:9696"                  ## Enable  to bypass Gluetun VPN for Internet traffic
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
 #    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

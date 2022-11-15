@@ -16,9 +16,8 @@ services:
     container_name: qbittorrent
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/qbittorrent:/config
-      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
-      - ${FOLDER_FOR_WATCH:?err}:/data/watch
+      - ${FOLDER_FOR_CONFIGS:?err}/qbittorrent:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}

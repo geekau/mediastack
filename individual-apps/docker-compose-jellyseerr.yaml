@@ -16,7 +16,7 @@ services:
     container_name: jellyseerr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyseerr:/app/config
+      - ${FOLDER_FOR_CONFIGS:?err}/jellyseerr:/app/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -30,5 +30,5 @@ services:
 #      - "${WEBUI_PORT_JELLYSEERR:?err}:5055"                ## Enable  to bypass Gluetun VPN for Internet traffic
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
 #    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

@@ -16,10 +16,8 @@ services:
     container_name: mylar3
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/mylar:/config
-      - ${FOLDER_FOR_MEDIA:?err}:/data/media
-      - ${FOLDER_FOR_TORRENTS:?err}:/data/torrents
-      - ${FOLDER_FOR_USENET:?err}:/data/usenet
+      - ${FOLDER_FOR_CONFIGS:?err}/mylar3:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -34,5 +32,5 @@ services:
 #      - "${WEBUI_PORT_MYLAR3:?err}:8090"                    ## Enable  to bypass Gluetun VPN for Internet traffic
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
 #    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

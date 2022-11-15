@@ -20,8 +20,8 @@ services:
 #      - /dev/dri/renderD128:/dev/dri/renderD128
 #      - /dev/dri/card0:/dev/dri/card0
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/jellyfin:/config
-      - ${FOLDER_FOR_MEDIA:?err}:/data/media
+      - ${FOLDER_FOR_CONFIGS:?err}/jellyfin:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -38,5 +38,5 @@ services:
 #      - 1900:1900/udp                                       ## Enable  for DLNA (Won't work with VPN connection)
 #networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
 #  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media_network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
+#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
 #    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic

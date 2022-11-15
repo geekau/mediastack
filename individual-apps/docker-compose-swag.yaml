@@ -2,8 +2,7 @@
 ########################################################################
 ##
 ##    Docker Compose File: SWAG (LinuxServer.io)
-##    Function: Reverse proxy with built-in ACME compliant Certbot, for
-##    Let's Encrypt / ZeroSSL, and MFA / 2FA authentication mechanisms.
+##    Function: Reverse proxy with Certbot, for Let's Encrypt / ZeroSSL
 ##
 ##    Documentation: https://docs.linuxserver.io/general/swag
 ##    https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
@@ -19,32 +18,29 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ${FOLDER_FOR_DOCKER_DATA:?err}/swag:/config
-    ports:
-# Set your Internet gateway to forward REVERSE_PROXY_PORT_HTTP(s) ports
-# to your internal Docker host IP address. Update in ENV file and redeploy.
-      - ${REVERSE_PROXY_PORT_HTTP:?err}:80      # Auto redirects to 443
-      - ${REVERSE_PROXY_PORT_HTTPS:?err}:443
+      - ${FOLDER_FOR_CONFIGS:?err}/swag:/config
     restart: unless-stopped
+    ports:
+      - ${REVERSE_PROXY_PORT_HTTP:?err}:80
+      - ${REVERSE_PROXY_PORT_HTTPS:?err}:443
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-      - URL=homelan.au
-      - SUBDOMAINS=www,
-      - VALIDATION=http
-      - CERTPROVIDER=                # Optional
-      - DNSPLUGIN=cloudflare         # Optional
-      - DUCKDNSTOKEN=<token>         # Optional
-      - EMAIL=<e-mail>               # Optional
-      - ONLY_SUBDOMAINS=false        # Optional
-      - EXTRA_DOMAINS=<extradomains> # Optional
-      - STAGING=false                # Optional
+      - URL=${URL:?err}
+      - SUBDOMAINS=${SUBDOMAINS}
+      - VALIDATION=${VALIDATION:?err}
+      - CERTPROVIDER=${CERTPROVIDER}
+      - DNSPLUGIN=${DNSPLUGIN}
+      - PROPAGATION=${PROPAGATION}
+      - DUCKDNSTOKEN=${DUCKDNSTOKEN}
+      - EMAIL=${EMAIL}
+      - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
+      - EXTRA_DOMAINS=${EXTRA_DOMAINS}
+      - STAGING=${STAGING}
 
-# This container must not use VPN connection, otherwise reverse proxy functions will not
-# work, as ports need to be forwarded from your gateway device, to the Docker host IP address.
 networks:
   default:
-    name: media_network
+    name: media-network
     external: true

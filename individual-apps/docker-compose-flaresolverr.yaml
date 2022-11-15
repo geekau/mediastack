@@ -15,15 +15,17 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: unless-stopped
+    ports:                                      ## Enable  to bypass Gluetun VPN for Internet traffic
+      - "${FLARESOLVERR_PORT:?err}:8191"  ## Enable  to bypass Gluetun VPN for Internet traffic
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false
       - CAPTCHA_SOLVER=none
       - TZ=${TIMEZONE:?err}
 
-# Configure VPN / Direct Internet access below. You will also need to make relevant change in the Gluetun VPN container
+#    network_mode: "container:gluetun"            ## Disable to bypass Gluetun VPN for Internet traffic
 
-    network_mode: "container:gluetun"            ## Disable to bypass Gluetun VPN for Internet traffic
-#    networks: "media_network"                   ## Enable  to bypass Gluetun VPN for Internet traffic
-#    ports:                                      ## Enable  to bypass Gluetun VPN for Internet traffic
-#      - "${WEBUI_PORT_FLARESOLVERR:?err}:8191"  ## Enable  to bypass Gluetun VPN for Internet traffic
+networks:
+  default:
+    name: media-network
+    external: true
