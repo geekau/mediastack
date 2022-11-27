@@ -67,7 +67,7 @@ VPN_USERNAME=<username from VPN provider>
 VPN_PASSWORD=<password from VPN provider>
 SERVER_REGION=<regions supported by VPN provider>
 ```
-==**All containers are initally configured to sit behind the VPN connection for security / privacy. If you want the containers to have direct Internet access, follow the steps in each of the YAML files to change the network configuration, and restart the container.**==
+== **All containers are initally configured to sit behind the VPN connection for security / privacy. If you want the containers to have direct Internet access, follow the steps in each of the YAML files to change the network configuration, and restart the container.** ==
 
 ## 3 - Set up all of the folders / subfolders:
 The commands suit the folders defined above in your ENV file for **FOLDER_FOR_CONFIGS** and **FOLDER_FOR_MEDIA**.
@@ -78,7 +78,7 @@ If you used Linux / NAS folders in the ENV file, then use the following commands
 export FOLDER_FOR_CONFIGS=/home/geekau/docker
 export FOLDER_FOR_MEDIA=/home/geekau/media-stack
 
-sudo -E mkdir -p $FOLDER_FOR_CONFIGS/{authelia,bazarr,gluetun,heimdall,jellyfin,jellyseerr,lidarr,mylar3,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr,tdarr_transcode_cache,unpackerr,whisparr}
+sudo -E mkdir -p $FOLDER_FOR_CONFIGS/{authelia,bazarr,ddns-updater,gluetun,heimdall,jellyfin,jellyseerr,lidarr,mylar3,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr,tdarr_transcode_cache,unpackerr,whisparr}
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{adult,anime,audio,books,comics,movies,music,photos,podcasts,series,software}
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{adult,anime,audio,books,comics,movies,music,prowlarr,podcasts,series,software}
@@ -92,11 +92,11 @@ If you used Windows folders in the ENV file, then use the following commands to 
 set FOLDER_FOR_CONFIGS=D:\Storage\Docker
 set FOLDER_FOR_MEDIA=D:\Storage\Media-Stack
 
-FOR /D %I IN (authelia bazarr gluetun heimdall jellyfin jellyseerr lidarr mylar3 portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_CONFIGS%\%I
-FOR /D %I IN (adult anime audio books comics movies music photos podcasts series software) DO mkdir %FOLDER_FOR_MEDIA%\Media\%I
-FOR /D %I IN (adult anime audio books comics movies music podcasts prowlarr series software) DO mkdir %FOLDER_FOR_MEDIA%\Usenet\%I
-FOR /D %I IN (adult anime audio books comics movies music podcasts prowlarr series software) DO mkdir %FOLDER_FOR_MEDIA%\Torrents\%I
-mkdir %FOLDER_FOR_MEDIA%\Watch
+FOR /D %I IN (authelia bazarr ddns-updater gluetun heimdall jellyfin jellyseerr lidarr mylar3 portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_CONFIGS%\%I
+FOR /D %I IN (adult anime audio books comics movies music photos podcasts series software) DO mkdir %FOLDER_FOR_MEDIA%\media\%I
+FOR /D %I IN (adult anime audio books comics movies music podcasts prowlarr series software) DO mkdir %FOLDER_FOR_MEDIA%\usenet\%I
+FOR /D %I IN (adult anime audio books comics movies music podcasts prowlarr series software) DO mkdir %FOLDER_FOR_MEDIA%\torrents\%I
+mkdir %FOLDER_FOR_MEDIA%\watch
 ```
 ### Folder mappings between host and Docker containers:
 After you run the commands above (Linux or Windows), **this will be your folder structure INSIDE your docker containers**:
@@ -189,7 +189,7 @@ sudo docker-compose --file docker-compose-sabnzbd.yaml     --env-file docker-com
 
 ## Deploy Archive Unpacker and Automatic Video Re-encoding:
 ```
-sudo docker-compose --file docker-compose-unpackarr.yaml --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-unpackerr.yaml --env-file docker-compose.env up -d
 sudo docker-compose --file docker-compose-tdarr.yaml     --env-file docker-compose.env up -d
 ```
 
@@ -199,6 +199,7 @@ sudo docker-compose --file docker-compose-tdarr.yaml     --env-file docker-compo
 sudo docker-compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d
 sudo docker-compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d
 sudo docker-compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d
+sudo docker-compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d
 sudo docker-compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d
 ```
 >The "your-domain-name.com" / IP Address validation is performed when the container is started for the first time. Nginx won't be up and start the web server, until ssl certs are successfully generated and installed.

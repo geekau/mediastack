@@ -1,7 +1,7 @@
 ########################################################################
 ########################################################################
 ##
-##  Docker Compose File: Unpackarr (Hotio.Dev)
+##  Docker Compose File: Unpackerr (Hotio.Dev)
 ##  Function: Archive Media Extraction
 ##
 ##  Documentation: https://github.com/davidnewhall/unpackerr
@@ -38,47 +38,39 @@ services:
       - UN_PARALLEL=1
       - UN_FILE_MODE=0664
       - UN_DIR_MODE=0775
-      # Sonarr Config
+      # Sonarr Config - Copy API Key from: http://sonarr:8989/general/settings
       - UN_SONARR_0_URL=http://sonarr:8989
-      - UN_SONARR_0_API_KEY=                    # Copy API Key from: http://sonarr:8989/general/settings
+      - UN_SONARR_0_API_KEY=
       - UN_SONARR_0_PATHS_0=/data/torrents/anime
       - UN_SONARR_0_PATHS_1=/data/torrents/series
       - UN_SONARR_0_PROTOCOLS=torrent
       - UN_SONARR_0_TIMEOUT=10s
       - UN_SONARR_0_DELETE_ORIG=false
       - UN_SONARR_0_DELETE_DELAY=5m
-      # Radarr Config
+      # Radarr Config - Copy API Key from: http://radarr:7878/general/settings
       - UN_RADARR_0_URL=http://radarr:7878
-      - UN_RADARR_0_API_KEY=                    # Copy API Key from: http://radarr:7878/general/settings
+      - UN_RADARR_0_API_KEY=
       - UN_RADARR_0_PATHS_0=/data/torrents/movies
       - UN_RADARR_0_PROTOCOLS=torrent
       - UN_RADARR_0_TIMEOUT=10s
       - UN_RADARR_0_DELETE_ORIG=false
       - UN_RADARR_0_DELETE_DELAY=5m
-      # Lidarr Config
+      # Lidarr Config - Copy API Key from: http://lidarr:8686/general/settings
       - UN_LIDARR_0_URL=http://lidarr:8686
-      - UN_LIDARR_0_API_KEY=                    # Copy API Key from: http://lidarr:8686/general/settings
+      - UN_LIDARR_0_API_KEY=
       - UN_LIDARR_0_PATHS_0=/data/torrents/music
       - UN_LIDARR_0_PROTOCOLS=torrent
       - UN_LIDARR_0_TIMEOUT=10s
       - UN_LIDARR_0_DELETE_ORIG=false
       - UN_LIDARR_0_DELETE_DELAY=5m
-      # Readarr Config
+      # Readarr Config - Copy API Key from: http://readarr:8787/general/settings
       - UN_READARR_0_URL=http://readarr:8787
-      - UN_READARR_0_API_KEY=                    # Copy API Key from: http://readarr:8787/general/settings
+      - UN_READARR_0_API_KEY=
       - UN_READARR_0_PATHS_0=/data/torrents/books
       - UN_READARR_0_PROTOCOLS=torrent
       - UN_READARR_0_TIMEOUT=10s
       - UN_READARR_0_DELETE_ORIG=false
       - UN_READARR_0_DELETE_DELAY=5m
-      # Whisparr Config
-      - UN_WHISPARR_0_URL=http://whisparr:6969
-      - UN_WHISPARR_0_API_KEY=                    # Copy API Key from: http://whisparr:6969/general/settings
-      - UN_WHISPARR_0_PATHS_0=/data/torrents/adult
-      - UN_WHISPARR_0_PROTOCOLS=torrent
-      - UN_WHISPARR_0_TIMEOUT=10s
-      - UN_WHISPARR_0_DELETE_ORIG=false
-      - UN_WHISPARR_0_DELETE_DELAY=5m
       # Folder Config
       - UN_FOLDER_0_PATH=
       - UN_FOLDER_0_EXTRACT_PATH=
