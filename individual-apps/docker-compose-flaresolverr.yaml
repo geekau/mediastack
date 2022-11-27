@@ -15,8 +15,8 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: unless-stopped
-    ports:                                      ## Enable  to bypass Gluetun VPN for Internet traffic
-      - "${FLARESOLVERR_PORT:?err}:8191"  ## Enable  to bypass Gluetun VPN for Internet traffic
+#    ports:                                      ## Enable  to bypass Gluetun VPN for Internet traffic
+#      - "${FLARESOLVERR_PORT:?err}:8191"        ## Enable  to bypass Gluetun VPN for Internet traffic
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false

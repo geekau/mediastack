@@ -232,6 +232,7 @@ http://docker-host:6969|Whisparr|(Library Manager - XXX)
 http://docker-host:8200|qBittorrent|(Downloader - Torrents)
 http://docker-host:5080|SWAG - Nginx|Web Server for Reverse Proxy HTTP
 http://docker-host:5433|SWAG - Nginx|Web Server for Reverse Proxy HTTPS
+http://docker-host:6500|DDNS-Updater|Web Portal - DDNS-Updater Status
 
 **Default qBittorrent Portal Access:**     Username: **admin**     Password: **adminadmin**
 
@@ -253,15 +254,41 @@ The SWAG container requires a resolvable domain name, and will automatically ins
  - https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
 
 
-## 5 - Configuring the docker applications after they have been deployed
-Refer to:
- - https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.184/
- - https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
 
-Follow what is in these pages for now, they will be updated further to include these applications / setup.
+## Configuring DDNS-Updater for Reverse Proxy
+
+Reference: https://hub.docker.com/r/qmcgaw/ddns-updater
+
+If you have a Dynamic IP address, you will need a way to keep your Dynamic IP Address insync with your registered domain name. The DNS-Updater container supports MANY DDNS service providers, however we need to use Cloudflare as part of the Authelia zero trust framework for our multifacture authentication, so it makes sense to use Cloudflare to also host your domain and update it with DDNS-Updater. Head over to Cloudflare and register a free account: https://dash.cloudflare.com/sign-up
+
+Once you have registered a free account with Cloudflare, you can transfer your existing domain to Cloudflare with "Domain Registration" --> "Transfer Domains", or you can purchase a new domain inside Cloudflare with "Domain Registration" --> "Purchase Domains".
+
+If you don't want to pay for a domain and want to use a free DDNS domain, then check out the DDNS-Updater documenation and follow the DDNS set up for your preferred option.
+
+Configure the DDNS-Updater by editing the "config.json" file with the details and credentials for your DDNS provider.
+
+```
+sudo vi FOLDER_FOR_CONFIGS/ddns-updater/config.json
+
+{
+  "settings": [
+    {
+      "provider": "cloudflare",
+      "zone_identifier": "zone id",
+      "domain": "your-domain-name.com",
+      "host": "@",
+      "ttl": 600,
+      "token": "yourtoken",
+      "ip_version": "ipv4"
+    }
+  ]
+}
+```
+
+Restart the DDNS-Updater container, then check the status at: http://docker-host:6500
 
 
-## 6 - Configuring SWAG HTTP / DNS 
+## Configuring SWAG HTTP / DNS
 In order for the Certbot tool inside SWAG to be able to request / issue a digital SSL certificate from Let's Encrypt or ZeroSSL, you need to set up the validation type in ENV.
 ```
 sudo vi docker-compose.env
@@ -288,15 +315,57 @@ sudo vi $FOLDER_FOR_CONFIGS/swag/dns-conf/cloudflare.ini
 
 ###Once your SWAG Server has validated "your-domain-name.com" / IP address, and installed an SSL certificate, the Nginx web server will start working.
 
-###If you have forwarded ports 80 and 443 to the Docker host on 5080 and 5443, then you should be able to access the Nginx web server welcome page.
+###If you have forwarded ports 80 and 443 to the Docker host on 5080 and 5443, then you should be able to access the Nginx web server welcome page from the Internet.
 
->NOTE: All HTTP traffice on port 80 is automatically redirected to HTTPS on port 443, so it helps to have both ports open and redirected.
+You can use an online remote web browser to check if your site is accessible from the Internet. Go to https://www.browserling.com/ and put in your domain name to test.
 
-
-
-
+>NOTE: All HTTP traffic on port 80 is automatically redirected to HTTPS on port 443, so it helps to have both ports open and redirected.
 
 
+
+## Activate Authelia Integration in SWAG Container
+
+How to set up users, passwords and groups in Authelia
+https://www.authelia.com/reference/guides/passwords/
+
+
+https://www.authelia.com/integration/prologue/get-started/
+
+
+```
+sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/authelia-server.conf
+sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/authelia-location.conf
+
+sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/site-confs/default.conf
+include /config/nginx/authelia-server.conf;
+
+sudo cp $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-server.conf.sample   $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-server.conf
+sudo cp $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-location.conf.sample $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-location.conf
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 5 - Configuring the docker applications after they have been deployed
+Refer to:
+ - https://www.synoforum.com/resources/ultimate-starter-page-1-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.184/
+ - https://www.synoforum.com/resources/ultimate-starter-page-2-jellyfin-jellyseerr-nzbget-torrents-and-arr-media-library-stack.185/
+
+Follow what is in these pages for now, they will be updated further to include these applications / setup.
 
 
 
@@ -329,27 +398,6 @@ include /config/nginx/authelia-location.conf;
 sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/site-confs/default.conf
 
 ```
-
-
-How to set up users, passwords and groups in Authelia
-https://www.authelia.com/reference/guides/passwords/
-
-
-https://www.authelia.com/integration/prologue/get-started/
-
-
-## Activate Authelia Integration in SWAG Container
-```
-sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/authelia-server.conf
-sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/authelia-location.conf
-
-sudo vi $FOLDER_FOR_CONFIGS/swag/nginx/site-confs/default.conf
-include /config/nginx/authelia-server.conf;
-
-sudo cp $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-server.conf.sample   $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-server.conf
-sudo cp $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-location.conf.sample $FOLDER_FOR_CONFIGS/swag/nginx/proxy-confs/authelia-location.conf
-```
-
 
 
 # THESE ARE ITEMS FOR NOTES ONLY AT THIS POINT

@@ -12,6 +12,7 @@
 ########################################################################
 version: "3.7"
 
+services:
   authelia:
     image: ghcr.io/authelia/authelia:latest
     container_name: authelia
