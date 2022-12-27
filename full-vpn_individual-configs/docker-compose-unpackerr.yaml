@@ -24,7 +24,6 @@ services:
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-
 # Documentation on all Environment Variables can be found at:
 # https://github.com/davidnewhall/unpackerr#docker-env-variables
       - UN_DEBUG=false
