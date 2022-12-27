@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Radarr (LinuxServer.io)
+##  Function: Movie Library Manager
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-radarr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/radarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_RADARR:?err}:7878"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+      - TP_THEME=${TP_THEME:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true

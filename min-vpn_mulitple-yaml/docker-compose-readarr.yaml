@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Readarr (LinuxServer.io)
+##  Function: Book Library Manager
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-readarr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/readarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_READARR:?err}:8787"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
+      - TP_THEME=${TP_THEME:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true

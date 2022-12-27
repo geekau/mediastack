@@ -1,0 +1,56 @@
+###########################################################################
+###########################################################################
+##
+##    Docker Compose File: DDNS-Updater (qmcgaw)
+##    Function: Update Dynamic IP addresses for DNS A and/or AAAA records
+##
+##    Documentation: https://hub.docker.com/r/qmcgaw/ddns-updater
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  ddns-updater:
+    image: qmcgaw/ddns-updater:latest
+    container_name: ddns-updater
+    restart: always
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/ddns-updater:/updater/data
+    ports:
+      - ${WEBUI_PORT_DDNS_UPDATER:?err}:${WEBUI_PORT_DDNS_UPDATER:?err}/tcp
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - CONFIG=
+      - PERIOD=5m
+      - UPDATE_COOLDOWN_PERIOD=5m
+      - PUBLICIP_FETCHERS=all
+      - PUBLICIP_HTTP_PROVIDERS=all
+      - PUBLICIPV4_HTTP_PROVIDERS=all
+      - PUBLICIPV6_HTTP_PROVIDERS=all
+      - PUBLICIP_DNS_PROVIDERS=all
+      - PUBLICIP_DNS_TIMEOUT=3s
+      - HTTP_TIMEOUT=10s
+
+      # Web UI
+      - LISTENING_PORT=${WEBUI_PORT_DDNS_UPDATER:?err}
+      - ROOT_URL=/
+
+      # Backup
+      - BACKUP_PERIOD=0 # 0 to disable
+      - BACKUP_DIRECTORY=/updater/data
+
+      # Other
+      - LOG_LEVEL=info
+      - LOG_CALLER=hidden
+      - SHOUTRRR_ADDRESSES=
+
+# NOTE: DDNS-Update MUST NOT connect to the Gluetun VPN container
+
+networks:
+  default:
+    name: media-network
+    external: true

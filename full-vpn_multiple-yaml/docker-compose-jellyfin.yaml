@@ -1,0 +1,40 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Jellyfin (LinuxServer.io)
+##  Function: Media Server
+##
+##  Documentation: https://jellyfin.org/docs/general/administration/installing#docker
+##  https://jellyfin.org/docs/general/administration/hardware-acceleration/
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+# Add Configurations for GPU Hardware Rendering Here:
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/jellyfin:/config
+      - ${FOLDER_FOR_MEDIA:?err}/media:/data/media
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+#      - JELLYFIN_PublishedServerUrl=${LOCAL_DOCKER_IP:?err}  # Enable for DLNA - Only works on HOST Network Mode
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_JELLYFIN:?err}:8096"             # Configured in Gluetun VPN container
+#      - 7359:7359/udp                 # Enable for DLNA - Only works on HOST Network Mode
+#      - 1900:1900/udp                 # Enable for DLNA - Only works on HOST Network Mode

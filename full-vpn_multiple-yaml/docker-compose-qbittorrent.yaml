@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: qBittorrent (LinuxServer.io)
+##  Function: Torrent Download Client
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-qbittorrent
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/qbittorrent:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - WEBUI_PORT=${WEBUI_PORT_QBITTORRENT:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
+      - TP_THEME=${TP_THEME:?err}
+
+## Do Not Change Network for qBittorrent
+## qBittorrent MUST always use a VPN / Secure Internet connection
+
+    network_mode: "container:gluetun"

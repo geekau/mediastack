@@ -1,0 +1,23 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Portainer (Portainer.io)
+##  Function: Alternate GUI Manager for Docker
+##
+##  Documentation: https://docs.portainer.io/start/install/server/docker
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${FOLDER_FOR_CONFIGS:?err}/portainer:/data
+    ports:
+      - "${WEBUI_PORT_PORTAINER:?err}:9443"
+    network_mode: bridge

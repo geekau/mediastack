@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Bazarr (LinuxServer.io)
+##  Function: Download subtitles for Radarr and Sonarr
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-bazarr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/bazarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_BAZARR:?err}:6767"             # Configured in Gluetun VPN container

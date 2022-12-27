@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Sonarr (LinuxServer.io)
+##  Function: Series Library Manager (TV Shows)
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-sonarr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/sonarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_SONARR:?err}:8989"             # Configured in Gluetun VPN container

@@ -1,0 +1,48 @@
+###########################################################################
+###########################################################################
+##
+##    Docker Compose File: SWAG (LinuxServer.io)
+##    Function: Reverse proxy with Certbot, for Let's Encrypt / ZeroSSL
+##
+##    Documentation: https://docs.linuxserver.io/general/swag
+##    https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/swag:/config
+    ports:
+      - ${REVERSE_PROXY_PORT_HTTP:?err}:80
+      - ${REVERSE_PROXY_PORT_HTTPS:?err}:443
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - URL=${URL:?err}
+      - SUBDOMAINS=${SUBDOMAINS}
+      - VALIDATION=${VALIDATION:?err}
+      - CERTPROVIDER=${CERTPROVIDER}
+      - DNSPLUGIN=${DNSPLUGIN}
+      - PROPAGATION=${PROPAGATION}
+      - DUCKDNSTOKEN=${DUCKDNSTOKEN}
+      - EMAIL=${EMAIL}
+      - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
+      - EXTRA_DOMAINS=${EXTRA_DOMAINS}
+      - STAGING=${STAGING}
+
+# NOTE: SWAG MUST NOT connect to the Gluetun VPN container
+
+networks:
+  default:
+    name: media-network
+    external: true

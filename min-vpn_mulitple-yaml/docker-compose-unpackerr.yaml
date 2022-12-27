@@ -1,0 +1,104 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Unpackerr (Hotio.Dev)
+##  Function: Archive Media Extraction
+##
+##  Documentation: https://github.com/davidnewhall/unpackerr
+##  https://github.com/davidnewhall/unpackerr/blob/master/examples/docker-compose.yml
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  unpackerr:
+    image: cr.hotio.dev/hotio/unpackerr:latest
+    container_name: unpackerr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/unpackerr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+# Documentation on all Environment Variables can be found at:
+# https://github.com/davidnewhall/unpackerr#docker-env-variables
+      - UN_DEBUG=false
+      - UN_LOG_FILE=
+      - UN_LOG_FILES=10
+      - UN_LOG_FILE_MB=10
+      - UN_INTERVAL=2m
+      - UN_START_DELAY=1m
+      - UN_RETRY_DELAY=5m
+      - UN_MAX_RETRIES=3
+      - UN_PARALLEL=1
+      - UN_FILE_MODE=0664
+      - UN_DIR_MODE=0775
+      # Sonarr Config - Copy API Key from: http://sonarr:8989/general/settings
+      - UN_SONARR_0_URL=http://sonarr:8989
+      - UN_SONARR_0_API_KEY=
+      - UN_SONARR_0_PATHS_0=/data/torrents/anime
+      - UN_SONARR_0_PATHS_1=/data/torrents/series
+      - UN_SONARR_0_PROTOCOLS=torrent
+      - UN_SONARR_0_TIMEOUT=10s
+      - UN_SONARR_0_DELETE_ORIG=false
+      - UN_SONARR_0_DELETE_DELAY=5m
+      # Radarr Config - Copy API Key from: http://radarr:7878/general/settings
+      - UN_RADARR_0_URL=http://radarr:7878
+      - UN_RADARR_0_API_KEY=
+      - UN_RADARR_0_PATHS_0=/data/torrents/movies
+      - UN_RADARR_0_PROTOCOLS=torrent
+      - UN_RADARR_0_TIMEOUT=10s
+      - UN_RADARR_0_DELETE_ORIG=false
+      - UN_RADARR_0_DELETE_DELAY=5m
+      # Lidarr Config - Copy API Key from: http://lidarr:8686/general/settings
+      - UN_LIDARR_0_URL=http://lidarr:8686
+      - UN_LIDARR_0_API_KEY=
+      - UN_LIDARR_0_PATHS_0=/data/torrents/music
+      - UN_LIDARR_0_PROTOCOLS=torrent
+      - UN_LIDARR_0_TIMEOUT=10s
+      - UN_LIDARR_0_DELETE_ORIG=false
+      - UN_LIDARR_0_DELETE_DELAY=5m
+      # Readarr Config - Copy API Key from: http://readarr:8787/general/settings
+      - UN_READARR_0_URL=http://readarr:8787
+      - UN_READARR_0_API_KEY=
+      - UN_READARR_0_PATHS_0=/data/torrents/books
+      - UN_READARR_0_PROTOCOLS=torrent
+      - UN_READARR_0_TIMEOUT=10s
+      - UN_READARR_0_DELETE_ORIG=false
+      - UN_READARR_0_DELETE_DELAY=5m
+      # Folder Config
+      - UN_FOLDER_0_PATH=
+      - UN_FOLDER_0_EXTRACT_PATH=
+      - UN_FOLDER_0_DELETE_AFTER=10m
+      - UN_FOLDER_0_DELETE_ORIGINAL=false
+      - UN_FOLDER_0_DELETE_FILES=false
+      - UN_FOLDER_0_MOVE_BACK=false
+      # Webhook Config
+      - UN_WEBHOOK_0_URL=
+      - UN_WEBHOOK_0_NAME=
+      - UN_WEBHOOK_0_NICKNAME=Unpackerr
+      - UN_WEBHOOK_0_CHANNEL=
+      - UN_WEBHOOK_0_TIMEOUT=10s
+      - UN_WEBHOOK_0_SILENT=false
+      - UN_WEBHOOK_0_IGNORE_SSL=false
+      - UN_WEBHOOK_0_EXCLUDE_0=
+      - UN_WEBHOOK_0_EVENTS_0=0
+      - UN_WEBHOOK_0_TEMPLATE_PATH=
+      - UN_WEBHOOK_0_CONTENT_TYPE=application/json
+      # Command Hook Config
+      - UN_CMDHOOK_0_COMMAND=
+      - UN_CMDHOOK_0_NAME=
+      - UN_CMDHOOK_0_TIMEOUT=10s
+      - UN_CMDHOOK_0_SILENT=false
+      - UN_CMDHOOK_0_SHELL=false
+      - UN_CMDHOOK_0_EXCLUDE_0=
+      - UN_CMDHOOK_0_EVENTS_0=0
+
+    security_opt:
+      - no-new-privileges:true
+
+    network_mode: none

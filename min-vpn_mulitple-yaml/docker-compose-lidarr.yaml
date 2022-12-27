@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Lidarr (LinuxServer.io)
+##  Function: Music Library Manager
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-lidarr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/lidarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_LIDARR:?err}:8686"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
+      - TP_THEME=${TP_THEME:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true
