@@ -1,5 +1,5 @@
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 ##
 ##    Docker Compose File: Authelia (Authelia)
 ##    Function: Multi-factor authentication portal for your Apps
@@ -8,8 +8,8 @@
 ##    https://www.authelia.com/integration/prologue/get-started/
 ##    https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
 ##
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 version: "3.7"
 
 services:
@@ -24,6 +24,8 @@ services:
     volumes:
       - ${FOLDER_FOR_CONFIGS:?err}/authelia:/config
     restart: unless-stopped
+
+# NOTE: Authelia MUST NOT connect to the Gluetun VPN container
 
 networks:
   default:

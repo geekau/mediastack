@@ -1,5 +1,5 @@
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 ##
 ##    Docker Compose File: SWAG (LinuxServer.io)
 ##    Function: Reverse proxy with Certbot, for Let's Encrypt / ZeroSSL
@@ -7,8 +7,8 @@
 ##    Documentation: https://docs.linuxserver.io/general/swag
 ##    https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
 ##
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 version: "3.7"
 
 services:
@@ -39,6 +39,8 @@ services:
       - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
       - EXTRA_DOMAINS=${EXTRA_DOMAINS}
       - STAGING=${STAGING}
+
+# NOTE: SWAG MUST NOT connect to the Gluetun VPN container
 
 networks:
   default:

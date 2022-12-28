@@ -1,13 +1,13 @@
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 ##
 ##    Docker Compose File: DDNS-Updater (qmcgaw)
 ##    Function: Update Dynamic IP addresses for DNS A and/or AAAA records
 ##
 ##    Documentation: https://hub.docker.com/r/qmcgaw/ddns-updater
 ##
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 version: "3.7"
 
 services:
@@ -48,7 +48,8 @@ services:
       - LOG_CALLER=hidden
       - SHOUTRRR_ADDRESSES=
 
-#NOTE: DDNS-Update MUST be connected to the bridge network and NOT the VPN container
+# NOTE: DDNS-Update MUST NOT connect to the Gluetun VPN container
+
 networks:
   default:
     name: media-network

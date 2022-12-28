@@ -1,5 +1,5 @@
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 ##
 ##  Docker Compose File: Unpackerr (Hotio.Dev)
 ##  Function: Archive Media Extraction
@@ -7,8 +7,8 @@
 ##  Documentation: https://github.com/davidnewhall/unpackerr
 ##  https://github.com/davidnewhall/unpackerr/blob/master/examples/docker-compose.yml
 ##
-########################################################################
-########################################################################
+###########################################################################
+###########################################################################
 version: "3.7"
 
 services:
@@ -100,13 +100,10 @@ services:
 
     security_opt:
       - no-new-privileges:true
+    network_mode: "container:gluetun"
 
-# Configure VPN / Direct Internet access below. You will also need to make change in the Gluetun VPN Container
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
 
-    network_mode: "container:gluetun"                        ## Disable to bypass Gluetun VPN for Internet traffic
-#    ports:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#      - "${WEBUI_PORT_SONARR:?err}:8989"                    ## Enable  to bypass Gluetun VPN for Internet traffic
-#networks:                                                   ## Enable  to bypass Gluetun VPN for Internet traffic
-#  default:                                                  ## Enable  to bypass Gluetun VPN for Internet traffic
-#    name: media-network                                     ## Enable  to bypass Gluetun VPN for Internet traffic
-#    external: true                                          ## Enable  to bypass Gluetun VPN for Internet traffic
+#    ports:
+#      - "${WEBUI_PORT_SONARR:?err}:8989"             # Configured in Gluetun VPN container
