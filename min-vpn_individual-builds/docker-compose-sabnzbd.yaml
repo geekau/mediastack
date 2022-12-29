@@ -1,30 +1,31 @@
 ###########################################################################
 ###########################################################################
 ##
-##    Docker Compose File: Heimdall (LinuxServer.io)
-##    Function: Organise links to web sites and web applications
+##  Docker Compose File: SABnzbd (LinuxServer.io)
+##  Function: Usenet Download Client
 ##
-##    Documentation: https://docs.linuxserver.io/images/docker-heimdall
-##    https://docs.linuxserver.io/general/swag#using-heimdall-as-the-home-page-at-domain-root
+##  Documentation: https://docs.linuxserver.io/images/docker-sabnzbd
 ##
 ###########################################################################
 ###########################################################################
 version: "3.7"
 
 services:
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/heimdall:/config
+      - ${FOLDER_FOR_CONFIGS:?err}/sabnzbd:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_SABNZBD:?err}:8080"
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
-      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-
-# NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sabnzbd
+      - TP_THEME=${TP_THEME:?err}
 
 networks:
   default:

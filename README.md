@@ -52,11 +52,45 @@ The Docker applications and services across the different directories / deployme
 
 ## What about Inbound Internet traffic?
 
-Regardless of which deployment you chose above, all incoming Internet traffic still goes through Cloudflare DNS and Zero Trust Network Access services, so the network configuration for SWAG (reverse proxy / application gateway), Authelia, Heimdall, FlareSolverr and DDNS-Updater applications are not configured to use the Gluetun VPN, as Cloudflare will proxy your inbound Internet traffic directly to your IP Address / Internet connection. SWAG is build to secure all inbound network traffic from the Internet, refer to [https://MediaStack.Guide](https://MediaStack.Guide) for instructions on setting up Internet access to your internal Docker environment.
+Regardless of which deployment you chose above, all incoming Internet traffic still goes through Cloudflare DNS and Zero Trust Network Access services, so the network configuration for SWAG (reverse proxy / application gateway), Authelia, Heimdall and DDNS-Updater applications are not configured to use the Gluetun VPN, as Cloudflare will proxy your inbound Internet traffic directly to your IP Address / Internet connection. SWAG is build to secure all inbound network traffic from the Internet, refer to [https://MediaStack.Guide](https://MediaStack.Guide) for instructions on setting up Internet access to your internal Docker environment.
 
 ---
 
-### TL;DR
+## VPN Connectivity Matrix
+
+The following table shows which applications do, and do not, use the secure VPN connection, depending on the deployment method you initially choose.
+
+Container    | Full VPN   | Min VPN
+-------------|:----------:|:---------:
+Authelia     | No - Never | No - Never
+Bazarr       | Yes        | No
+DDNS-Updater | No - Never | No - Never
+Flaresolverr | Yes        | No
+Gluetun      | N/A        | N/A
+Heimdall     | No - Never | No - Never
+Jellyfin     | Yes        | No
+Jellyseerr   | Yes        | No
+Lidarr       | Yes        | No
+Mylar3       | Yes        | No
+Prowlarr     | Yes        | No
+qBittorrent  | Yes - Must | Yes - Must 
+Radarr       | Yes        | No
+Readarr      | Yes        | No
+SABnzbd      | Yes        | No
+Sonarr       | Yes        | No
+SWAG         | No - Never | No - Never
+Tdarr        | Yes        | No
+Tdarr-Node   | Yes        | No
+Unpackerr    | No Network | No Network
+Whisparr     | Yes        | No
+Portainer    | Bridge     | Bridge
+
+> Must = Container MUST always connect via VPN container \
+> Never = Container should NEVER connect via VPN container
+
+---
+
+## TL;DR
 
 1.  Download the full "media-stack" repository to your computer
 
@@ -67,3 +101,7 @@ Regardless of which deployment you chose above, all incoming Internet traffic st
 4. Deploy all Docker containers - If deploying containers individually, the Gluetun VPN container must be deployed first
 
 5. Import "MediaStack.Guide Applications" bookmarks into your web browser to easily access each WebUI portal
+
+---
+
+See you at: [https://MediaStack.Guide](https://MediaStack.Guide)

@@ -1,30 +1,31 @@
 ###########################################################################
 ###########################################################################
 ##
-##    Docker Compose File: Heimdall (LinuxServer.io)
-##    Function: Organise links to web sites and web applications
+##  Docker Compose File: Sonarr (LinuxServer.io)
+##  Function: Series Library Manager (TV Shows)
 ##
-##    Documentation: https://docs.linuxserver.io/images/docker-heimdall
-##    https://docs.linuxserver.io/general/swag#using-heimdall-as-the-home-page-at-domain-root
+##  Documentation: https://docs.linuxserver.io/images/docker-sonarr
 ##
 ###########################################################################
 ###########################################################################
 version: "3.7"
 
 services:
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/heimdall:/config
+      - ${FOLDER_FOR_CONFIGS:?err}/sonarr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_SONARR:?err}:8989"
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
-      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-
-# NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      - TP_THEME=${TP_THEME:?err}
 
 networks:
   default:

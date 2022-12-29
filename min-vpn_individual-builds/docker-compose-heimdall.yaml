@@ -24,8 +24,6 @@ services:
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
 
-# NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
-
 networks:
   default:
     name: media-network
