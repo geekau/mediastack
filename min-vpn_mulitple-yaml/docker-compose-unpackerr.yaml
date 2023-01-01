@@ -100,3 +100,5 @@ services:
 
     security_opt:
       - no-new-privileges:true
+
+    network_mode: none

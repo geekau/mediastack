@@ -80,7 +80,7 @@ services:
       - HTTPPROXY=on
       - SHADOWSOCKS=on
 
-# NOTE: Gluetun VPN MUST ONLY to the media-network
+# NOTE: Gluetun VPN container MUST ONLY connect to the media-network
 
     networks:
       - media-network

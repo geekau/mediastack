@@ -16,7 +16,7 @@ The Docker applications and services across the different directories / deployme
 
 ---
 
-## Directory: full-vpn_individual-builds
+## Directory: full-vpn_multiple-yaml
 
  - All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption
  - Each Docker container is deployed separately, using its own individual docker-compose deployment file
@@ -24,7 +24,7 @@ The Docker applications and services across the different directories / deployme
 
 ---
 
-## Directory: full-vpn_single-build
+## Directory: full-vpn_single-yaml
 
  - All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption
  - All Docker containers are deployed collectively, with all applications sharing a single docker-compose deployment file
@@ -32,7 +32,7 @@ The Docker applications and services across the different directories / deployme
 
 ---
 
-## Directory: min-vpn_individual-builds
+## Directory: min-vpn_multiple-yaml
 
  - Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency
  - Each Docker container is deployed separately, using its own individual docker-compose deployment file
@@ -40,7 +40,7 @@ The Docker applications and services across the different directories / deployme
 
 ---
 
-## Directory: min-vpn_single-build
+## Directory: min-vpn_single-yaml
 
  - Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency
  - All Docker containers are deployed collectively, with all applications sharing a single docker-compose deployment file
@@ -56,7 +56,7 @@ Regardless of which deployment you chose above, all incoming Internet traffic st
 
 ---
 
-## VPN Connectivity Matrix
+## VPN / Network Connectivity Matrix
 
 The following table shows which applications do, and do not, use the secure VPN connection, depending on the deployment method you initially choose.
 
