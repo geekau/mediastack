@@ -1,0 +1,32 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Whisparr (Hotio.Dev)
+##  Function: Adult Media Library Manager
+##
+##  Documentation: https://wiki.servarr.com/whisparr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  whisparr:
+    image: hotio/whisparr:nightly
+    container_name: whisparr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/whisparr:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${WEBUI_PORT_WHISPARR:?err}:6969"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true

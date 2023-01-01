@@ -1,0 +1,61 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Tdarr V2 (haveagitgat/tdarr)
+##  Function: Tdarr V2 - Audio/Video library transcoding automation
+##            (Contains Tdarr_Server and WebUI ) 
+##
+##  Documentation: https://docs.tdarr.io/docs/installation/docker/run-compose/
+##  https://docs.tdarr.io/docs/installation/docker/hardware-transcoding
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:latest
+    container_name: tdarr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/server:/app/server
+      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    ports:
+      - "${TDARR_SERVER_PORT:?err}:${TDARR_SERVER_PORT:?err}"
+      - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - serverIP=0.0.0.0
+      - serverPort=${TDARR_SERVER_PORT:?err}
+      - webUIPort=${WEBUI_PORT_TDARR:?err}
+      - internalNode=true
+      - nodeID=Tdarr_Server
+
+  tdarr-node:
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    container_name: tdarr-node
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - nodeID=Tdarr_Node_1
+      - serverIP=0.0.0.0
+      - serverPort=${TDARR_SERVER_PORT:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true

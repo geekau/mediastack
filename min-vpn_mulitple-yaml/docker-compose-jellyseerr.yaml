@@ -1,0 +1,31 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Jellyseerr (fallenbagel)
+##  Function: Media Request Manager
+##
+##  Documentation: https://hub.docker.com/r/fallenbagel/jellyseerr
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/jellyseerr:/app/config
+    ports:
+      - "${WEBUI_PORT_JELLYSEERR:?err}:5055"
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+
+networks:
+  default:
+    name: media-network
+    external: true

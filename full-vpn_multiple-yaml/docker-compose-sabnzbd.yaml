@@ -1,0 +1,33 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: SABnzbd (LinuxServer.io)
+##  Function: Usenet Download Client
+##
+##  Documentation: https://docs.linuxserver.io/images/docker-sabnzbd
+##
+###########################################################################
+###########################################################################
+version: "3.7"
+
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_CONFIGS:?err}/sabnzbd:/config
+      - ${FOLDER_FOR_MEDIA:?err}:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - TZ=${TIMEZONE:?err}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sabnzbd
+      - TP_THEME=${TP_THEME:?err}
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_SABNZBD:?err}:8080"             # Configured in Gluetun VPN container
