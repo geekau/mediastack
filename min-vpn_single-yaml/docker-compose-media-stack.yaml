@@ -117,7 +117,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:bazarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -310,7 +310,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:lidarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -338,7 +338,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:mylar3
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:mylar3
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -365,7 +365,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:prowlarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:prowlarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -393,7 +393,7 @@ services:
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - WEBUI_PORT=${WEBUI_PORT_QBITTORRENT:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:qbittorrent
       - TP_THEME=${TP_THEME:?err}
 
 ## Do Not Change Network for qBittorrent
@@ -424,7 +424,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:radarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -452,7 +452,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:readarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -480,7 +480,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sabnzbd
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:sabnzbd
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network
@@ -508,7 +508,7 @@ services:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:sonarr
       - TP_THEME=${TP_THEME:?err}
     networks:
       - media-network

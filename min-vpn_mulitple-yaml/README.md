@@ -1,8 +1,8 @@
 # Docker Media Stack: min-vpn_multiple-yaml
 
-Go to: [https://github.com/geekau/media-stack](https://github.com/geekau/media-stack)
+Go to: [https://github.com/geekau/mediastack](https://github.com/geekau/mediastack)
 
-Download the full "media-stack" repository to your computer by selecting "**Code**" --> "**Download Zip**"
+Download the full "mediastack" repository to your computer by selecting "**Code**" --> "**Download Zip**"
 
 Extract the downloaded zip file, then go to the directory which suits your deployment method
 
