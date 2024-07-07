@@ -21,3 +21,4 @@ services:
     ports:
       - "${WEBUI_PORT_PORTAINER:?err}:9443"
     network_mode: bridge
+    
