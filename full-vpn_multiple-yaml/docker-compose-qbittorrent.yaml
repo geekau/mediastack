@@ -24,7 +24,7 @@ services:
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - WEBUI_PORT=${WEBUI_PORT_QBITTORRENT:?err}
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
+      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:qbittorrent
       - TP_THEME=${TP_THEME:?err}
 
 ## Do Not Change Network for qBittorrent
