@@ -1,3 +1,13 @@
+This is the latest development commit of the MediaStack.Guide:  
+
+https://25cbdf96.mediastack-guide.pages.dev/. 
+
+Unfortunately I didn't realise just how much effort was needed to write all the documentation, and the amount of additional applications and integration also grew, it became an insurmountable task.  
+
+This dev guide is missing a lot of text / sections, but has all. The steps needed to get all the apps up and running, and all configured (except for SWAG, Authelia, and Heimdal).  
+
+
+
 # Docker Media Stack
 
 Go to: [https://github.com/geekau/mediastack](https://github.com/geekau/mediastack)
