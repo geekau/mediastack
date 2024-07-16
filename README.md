@@ -4,9 +4,11 @@ https://25cbdf96.mediastack-guide.pages.dev/.
 
 Unfortunately I didn't realise just how much effort was needed to write all the documentation, and the amount of additional applications and integration also grew, it became an insurmountable task.  
 
-This dev guide is missing a lot of text / sections, but has all. The steps needed to get all the apps up and running, and all configured (except for SWAG, Authelia, and Heimdal).  
+This dev guide is missing a lot of text / sections, but has all the steps needed to get all the apps up and running, and all configured (except for SWAG, Authelia, and Heimdal... am still working on these configs).  
 
+If you feel you are able to contribute to the documentation, please head over the this repo: [https://github.com/geekau/mediastack-guide](https://github.com/geekau/mediastack-guide)
 
+---
 
 # Docker Media Stack
 
