@@ -8,15 +8,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/lidarr:/config
+      - ${FOLDER_FOR_DATA:?err}/lidarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     ports:
       - "${WEBUI_PORT_LIDARR:?err}:8686"
@@ -29,5 +27,5 @@ services:
 
 networks:
   default:
-    name: media-network
+    name: mediastack
     external: true

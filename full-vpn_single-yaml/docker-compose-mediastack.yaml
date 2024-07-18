@@ -1,10 +1,8 @@
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 networks:
-  media-network:
-    name: media-network
+  mediastack:
+    name: mediastack
     driver: bridge
     ipam:
       driver: default
@@ -58,18 +56,30 @@ services:
       - "${TDARR_SERVER_PORT:?err}:${TDARR_SERVER_PORT:?err}"   # Tdarr: Server Port
       - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
 
+      - "${WEBUI_PORT_PLEX:?err}:32400"         # WebUI Portal: Plex
+      - 1900:1900/udp                           # DNLA Service
+      - 5353:5353/udp                           # Plex Network Port
+      - 8324:8324                               # Plex Network Port
+      - 32410:32410/udp                         # Plex Network Port
+      - 32412:32412/udp                         # Plex Network Port
+      - 32413:32413/udp                         # Plex Network Port
+      - 32414:32414/udp                         # Plex Network Port
+      - 32469:32469                             # Plex Network Port
+
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/gluetun:/gluetun
+      - ${FOLDER_FOR_DATA:?err}/gluetun:/gluetun
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
       - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
-      - OPENVPN_USER=${VPN_USERNAME:?err}
-      - OPENVPN_PASSWORD=${VPN_PASSWORD:?err}
-      - SERVER_REGION=${SERVER_REGION:?err}
-      - SERVER_CITIES=${SERVER_CITIES}
-      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      - VPN_PORT_FORWARDING_USERNAME=${VPN_USERNAME:?err}
+      - VPN_PORT_FORWARDING_PASSWORD=${VPN_PASSWORD:?err}
+      - SERVER_COUNTRIES=$(SERVER_COUNTRIES)
+      - SERVER_REGIONS=$(SERVER_REGIONS)
+      - SERVER_CITIES=$(SERVER_CITIES)
+      - SERVER_HOSTNAMES=$(SERVER_HOSTNAMES)
+      - SERVER_CATEGORIES=$(SERVER_CATEGORIES)
       - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
       - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
       - VPN_TYPE=${VPN_TYPE}
@@ -82,7 +92,7 @@ services:
       - HTTPPROXY=on
       - SHADOWSOCKS=on
     networks:
-      - media-network
+      - mediastack
 
 ###########################################################################
 ###########################################################################
@@ -100,7 +110,7 @@ services:
     image: ghcr.io/authelia/authelia:latest
     container_name: authelia
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/authelia:/config
+      - ${FOLDER_FOR_DATA:?err}/authelia:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -109,7 +119,7 @@ services:
     restart: unless-stopped
 # NOTE: Authelia MUST NOT connect to the Gluetun VPN container
     networks:
-      - media-network
+      - mediastack
 
 ###########################################################################
 ###########################################################################
@@ -126,7 +136,7 @@ services:
     container_name: bazarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/bazarr:/config
+      - ${FOLDER_FOR_DATA:?err}/bazarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -153,7 +163,7 @@ services:
     container_name: ddns-updater
     restart: always
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/ddns-updater:/updater/data
+      - ${FOLDER_FOR_DATA:?err}/ddns-updater:/updater/data
     ports:
       - ${WEBUI_PORT_DDNS_UPDATER:?err}:${WEBUI_PORT_DDNS_UPDATER:?err}/tcp
     environment:
@@ -183,7 +193,7 @@ services:
       - SHOUTRRR_ADDRESSES=
 # NOTE: DDNS-Update MUST NOT connect to the Gluetun VPN container
     networks:
-      - media-network
+      - mediastack
 
 ###########################################################################
 ###########################################################################
@@ -224,7 +234,7 @@ services:
     container_name: heimdall
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/heimdall:/config
+      - ${FOLDER_FOR_DATA:?err}/heimdall:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -232,7 +242,7 @@ services:
       - TZ=${TIMEZONE:?err}
 # NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
     networks:
-      - media-network
+      - mediastack
 
 ###########################################################################
 ###########################################################################
@@ -254,7 +264,7 @@ services:
 #      - /dev/dri/renderD128:/dev/dri/renderD128
 #      - /dev/dri/card0:/dev/dri/card0
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/jellyfin:/config
+      - ${FOLDER_FOR_DATA:?err}/jellyfin:/config
       - ${FOLDER_FOR_MEDIA:?err}/media:/data/media
     environment:
       - PUID=${PUID:?err}
@@ -283,7 +293,7 @@ services:
     container_name: jellyseerr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/jellyseerr:/app/config
+      - ${FOLDER_FOR_DATA:?err}/jellyseerr:/app/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -308,7 +318,7 @@ services:
     container_name: lidarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/lidarr:/config
+      - ${FOLDER_FOR_DATA:?err}/lidarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -335,7 +345,7 @@ services:
     container_name: mylar3
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/mylar3:/config
+      - ${FOLDER_FOR_DATA:?err}/mylar3:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -346,6 +356,48 @@ services:
     network_mode: "service:gluetun"
 #    ports:
 #      - "${WEBUI_PORT_MYLAR3:?err}:8090"             # Configured in Gluetun VPN container
+
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Plex (LinuxServer.io)
+##  Function: Media Server
+##
+##  Documentation: https://hub.docker.com/r/linuxserver/plex
+##
+###########################################################################
+###########################################################################
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    restart: unless-stopped
+# Add Configurations for GPU Hardware Rendering Here:
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+    volumes:
+      - ${FOLDER_FOR_DATA:?err}/plex:/config
+      - ${FOLDER_FOR_MEDIA:?err}/media:/data/media
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - VERSION=docker
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    network_mode: "service:gluetun"
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+#    ports:
+#      - "${WEBUI_PORT_PLEX:?err}:32400"             # Configured in Gluetun VPN container
+#      - 1900:1900/udp
+#      - 5353:5353/udp
+#      - 8324:8324
+#      - 32410:32410/udp
+#      - 32412:32412/udp
+#      - 32413:32413/udp
+#      - 32414:32414/udp
+#      - 32469:32469
 
 ###########################################################################
 ###########################################################################
@@ -362,7 +414,7 @@ services:
     container_name: prowlarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/prowlarr:/config
+      - ${FOLDER_FOR_DATA:?err}/prowlarr:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -388,7 +440,7 @@ services:
     container_name: qbittorrent
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/qbittorrent:/config
+      - ${FOLDER_FOR_DATA:?err}/qbittorrent:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -417,7 +469,7 @@ services:
     container_name: radarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/radarr:/config
+      - ${FOLDER_FOR_DATA:?err}/radarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -444,7 +496,7 @@ services:
     container_name: readarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/readarr:/config
+      - ${FOLDER_FOR_DATA:?err}/readarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -471,7 +523,7 @@ services:
     container_name: sabnzbd
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/sabnzbd:/config
+      - ${FOLDER_FOR_DATA:?err}/sabnzbd:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -498,7 +550,7 @@ services:
     container_name: sonarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/sonarr:/config
+      - ${FOLDER_FOR_DATA:?err}/sonarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -528,7 +580,7 @@ services:
       - NET_ADMIN
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/swag:/config
+      - ${FOLDER_FOR_DATA:?err}/swag:/config
     ports:
       - ${REVERSE_PROXY_PORT_HTTP:?err}:80
       - ${REVERSE_PROXY_PORT_HTTPS:?err}:443
@@ -550,7 +602,7 @@ services:
       - STAGING=${STAGING}
 # NOTE: SWAG MUST NOT connect to the Gluetun VPN container
     networks:
-      - media-network
+      - mediastack
 
 ###########################################################################
 ###########################################################################
@@ -569,9 +621,9 @@ services:
     container_name: tdarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/server:/app/server
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/server:/app/server
+      - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
       - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
@@ -594,8 +646,8 @@ services:
     container_name: tdarr-node
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
       - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
@@ -620,11 +672,11 @@ services:
 ###########################################################################
 ###########################################################################
   unpackerr:
-    image: cr.hotio.dev/hotio/unpackerr:latest
+    image: ghcr.io/hotio/unpackerr:latest
     container_name: unpackerr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/unpackerr:/config
+      - ${FOLDER_FOR_DATA:?err}/unpackerr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -723,7 +775,7 @@ services:
     container_name: whisparr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/whisparr:/config
+      - ${FOLDER_FOR_DATA:?err}/whisparr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}

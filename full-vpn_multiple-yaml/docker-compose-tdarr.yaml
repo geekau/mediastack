@@ -10,17 +10,15 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   tdarr:
     image: ghcr.io/haveagitgat/tdarr:latest
     container_name: tdarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/server:/app/server
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/server:/app/server
+      - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
       - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
@@ -49,8 +47,8 @@ services:
     container_name: tdarr-node
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/configs:/app/configs
-      - ${FOLDER_FOR_CONFIGS:?err}/tdarr/logs:/app/logs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
+      - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
       - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:

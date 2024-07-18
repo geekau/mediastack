@@ -9,15 +9,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   unpackerr:
-    image: cr.hotio.dev/hotio/unpackerr:latest
+    image: ghcr.io/hotio/unpackerr:latest
     container_name: unpackerr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/unpackerr:/config
+      - ${FOLDER_FOR_DATA:?err}/unpackerr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}

@@ -8,11 +8,9 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 networks:
-  media-network:
-    name: media-network
+  mediastack:
+    name: mediastack
     driver: bridge
     ipam:
       driver: default
@@ -56,18 +54,30 @@ services:
       - "${TDARR_SERVER_PORT:?err}:${TDARR_SERVER_PORT:?err}"   # Tdarr: Server Port
       - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
 
+      - "${WEBUI_PORT_PLEX:?err}:32400"         # WebUI Portal: Plex
+      - 1900:1900/udp                           # DNLA Service
+      - 5353:5353/udp                           # Plex Network Port
+      - 8324:8324                               # Plex Network Port
+      - 32410:32410/udp                         # Plex Network Port
+      - 32412:32412/udp                         # Plex Network Port
+      - 32413:32413/udp                         # Plex Network Port
+      - 32414:32414/udp                         # Plex Network Port
+      - 32469:32469                             # Plex Network Port
+
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/gluetun:/gluetun
+      - ${FOLDER_FOR_DATA:?err}/gluetun:/gluetun
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - TZ=${TIMEZONE:?err}
       - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
-      - OPENVPN_USER=${VPN_USERNAME:?err}
-      - OPENVPN_PASSWORD=${VPN_PASSWORD:?err}
-      - SERVER_REGION=${SERVER_REGION:?err}
-      - SERVER_CITIES=${SERVER_CITIES}
-      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      - VPN_PORT_FORWARDING_USERNAME=${VPN_USERNAME:?err}
+      - VPN_PORT_FORWARDING_PASSWORD=${VPN_PASSWORD:?err}
+      - SERVER_COUNTRIES=$(SERVER_COUNTRIES)
+      - SERVER_REGIONS=$(SERVER_REGIONS)
+      - SERVER_CITIES=$(SERVER_CITIES)
+      - SERVER_HOSTNAMES=$(SERVER_HOSTNAMES)
+      - SERVER_CATEGORIES=$(SERVER_CATEGORIES)
       - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
       - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
       - VPN_TYPE=${VPN_TYPE}
@@ -80,7 +90,7 @@ services:
       - HTTPPROXY=on
       - SHADOWSOCKS=on
 
-# NOTE: Gluetun VPN container MUST ONLY connect to the media-network
+# NOTE: Gluetun VPN container MUST ONLY connect to the mediastack
 
     networks:
-      - media-network
+      - mediastack

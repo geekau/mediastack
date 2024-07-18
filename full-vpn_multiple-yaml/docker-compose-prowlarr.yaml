@@ -8,15 +8,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/prowlarr:/config
+      - ${FOLDER_FOR_DATA:?err}/prowlarr:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}

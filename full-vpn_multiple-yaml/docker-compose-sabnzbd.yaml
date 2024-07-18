@@ -8,15 +8,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/sabnzbd:/config
+      - ${FOLDER_FOR_DATA:?err}/sabnzbd:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}

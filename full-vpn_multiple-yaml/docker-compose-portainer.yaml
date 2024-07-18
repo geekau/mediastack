@@ -8,8 +8,6 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   portainer:
     image: portainer/portainer-ce:latest
@@ -17,7 +15,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${FOLDER_FOR_CONFIGS:?err}/portainer:/data
+      - ${FOLDER_FOR_DATA:?err}/portainer:/data
     ports:
       - "${WEBUI_PORT_PORTAINER:?err}:9443"
     network_mode: bridge

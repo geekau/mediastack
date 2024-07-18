@@ -1,38 +1,43 @@
 ###########################################################################
 ###########################################################################
 ##
-##  Docker Compose File: Jellyfin (LinuxServer.io)
+##  Docker Compose File: Plex (LinuxServer.io)
 ##  Function: Media Server
 ##
-##  Documentation: https://jellyfin.org/docs/general/administration/installing#docker
-##  https://jellyfin.org/docs/general/administration/hardware-acceleration/
+##  Documentation: https://hub.docker.com/r/linuxserver/plex
 ##
 ###########################################################################
 ###########################################################################
 services:
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: jellyfin
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
     restart: unless-stopped
 # Add Configurations for GPU Hardware Rendering Here:
 #    devices:
 #      - /dev/dri/renderD128:/dev/dri/renderD128
 #      - /dev/dri/card0:/dev/dri/card0
     volumes:
-      - ${FOLDER_FOR_DATA:?err}/jellyfin:/config
+      - ${FOLDER_FOR_DATA:?err}/plex:/config
       - ${FOLDER_FOR_MEDIA:?err}/media:/data/media
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-#      - JELLYFIN_PublishedServerUrl=${LOCAL_DOCKER_IP:?err}  # Enable for DLNA - Only works on HOST Network Mode
+      - VERSION=docker
+      - PLEX_CLAIM=${PLEX_CLAIM}
     network_mode: "container:gluetun"
 
 # Ports are disabled in containers when they are connected to VPN, as the
 # Gluetun container manages the ports for containers that connect via VPN
-
 #    ports:
-#      - "${WEBUI_PORT_JELLYFIN:?err}:8096"             # Configured in Gluetun VPN container
-#      - 7359:7359/udp                 # Enable for DLNA - Only works on HOST Network Mode
-#      - 1900:1900/udp                 # Enable for DLNA - Only works on HOST Network Mode
+#      - "${WEBUI_PORT_PLEX:?err}:32400"             # Configured in Gluetun VPN container
+#      - 1900:1900/udp
+#      - 5353:5353/udp
+#      - 8324:8324
+#      - 32410:32410/udp
+#      - 32412:32412/udp
+#      - 32413:32413/udp
+#      - 32414:32414/udp
+#      - 32469:32469

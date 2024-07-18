@@ -8,15 +8,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/sonarr:/config
+      - ${FOLDER_FOR_DATA:?err}/sonarr:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     ports:
       - "${WEBUI_PORT_SONARR:?err}:8989"
@@ -29,5 +27,5 @@ services:
 
 networks:
   default:
-    name: media-network
+    name: mediastack
     external: true

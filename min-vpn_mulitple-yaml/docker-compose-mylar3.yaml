@@ -8,15 +8,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   mylar3:
     image: lscr.io/linuxserver/mylar3:latest
     container_name: mylar3
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/mylar3:/config
+      - ${FOLDER_FOR_DATA:?err}/mylar3:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     ports:
       - "${WEBUI_PORT_MYLAR3:?err}:8090"
@@ -29,5 +27,5 @@ services:
 
 networks:
   default:
-    name: media-network
+    name: mediastack
     external: true

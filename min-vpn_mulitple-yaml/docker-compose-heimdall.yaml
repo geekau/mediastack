@@ -9,15 +9,13 @@
 ##
 ###########################################################################
 ###########################################################################
-version: "3.7"
-
 services:
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_CONFIGS:?err}/heimdall:/config
+      - ${FOLDER_FOR_DATA:?err}/heimdall:/config
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -28,5 +26,5 @@ services:
 
 networks:
   default:
-    name: media-network
+    name: mediastack
     external: true
