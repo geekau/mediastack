@@ -26,37 +26,11 @@ Follow the deployment instructions at: [https://MediaStack.Guide](https://MediaS
 
 The Docker applications and services across the different directories / deployments are all extactly the same, however they differ on which Docker containers are secured via VPN for Internet traffic, and whether the MediaStack applications are deployed individually (per file), or collectively as a group (single file).
 
----
+|                                                                                                                                                 | Each Docker container is deployed separately, using its own individual docker-compose deployment file. Gluetun VPN container must be deployed first, as it sets up the network stack and the VPN connection for all other containers to use | The network stack and VPN connection are set up as the complete Docker environment is deployed |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption           | full-vpn_multiple-yaml                                                                                                                                                                                                                      | full-vpn_single-yaml                                                                           |
+| Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency | min-vpn_multiple-yaml                                                                                                                                                                                                                       | min-vpn_single-yaml                                                                            |
 
-## Directory: full-vpn_multiple-yaml
-
- - All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption
- - Each Docker container is deployed separately, using its own individual docker-compose deployment file
- - Gluetun VPN container must be deployed first, as it sets up the network stack and the VPN connection for all other containers to use
-
----
-
-## Directory: full-vpn_single-yaml
-
- - All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption
- - All Docker containers are deployed collectively, with all applications sharing a single docker-compose deployment file
- - The network stack and VPN connection are set up as the complete Docker environment is deployed
-
----
-
-## Directory: min-vpn_multiple-yaml
-
- - Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency
- - Each Docker container is deployed separately, using its own individual docker-compose deployment file
- - Gluetun VPN container must be deployed first, as it sets up the network stack and the VPN connection for all other containers to use
-
----
-
-## Directory: min-vpn_single-yaml
-
- - Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency
- - All Docker containers are deployed collectively, with all applications sharing a single docker-compose deployment file
- - The network stack and VPN connection are set up as the complete Docker environment is deployed
 
 > NOTE: You can swap between the different deployments as / whenever you need, however you will need to ensure any configuration settings made in the `docker-compose.env` file, are copied into the new deployment folder.
 
