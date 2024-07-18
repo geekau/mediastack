@@ -1,12 +1,10 @@
-This is the latest development commit of the MediaStack.Guide:  
+Unfortunately I didn't realise just how much effort was needed to write all the documentation, and the amount of additional applications and integration also grew, it became an insurmountable task to complete the user guide.  
 
-[https://523e47ff.mediastack-guide.pages.dev/](https://523e47ff.mediastack-guide.pages.dev/).  
+[https://MediaStack.Guide](https://MediaStack.Guide)
 
-Unfortunately I didn't realise just how much effort was needed to write all the documentation, and the amount of additional applications and integration also grew, it became an insurmountable task.  
+This dev version of the guide is missing a lot of text / sections, but has all the steps needed to get all the apps up and running, and all configured (except for SWAG, Authelia, and Heimdal... am still working on these configs).  
 
-This dev guide is missing a lot of text / sections, but has all the steps needed to get all the apps up and running, and all configured (except for SWAG, Authelia, and Heimdal... am still working on these configs).  
-
-If you feel you are able to contribute to the documentation, please head over the this repo: [https://github.com/geekau/mediastack-guide](https://github.com/geekau/mediastack-guide)
+If you feel you are able to contribute to the documentation, please head over the this repo: [https://github.com/geekau/mediastack-guide](https://github.com/geekau/mediastack-guide)  
 
 ---
 
@@ -26,13 +24,13 @@ Follow the deployment instructions at: [https://MediaStack.Guide](https://MediaS
 
 The Docker applications and services across the different directories / deployments are all extactly the same, however they differ on which Docker containers are secured via VPN for Internet traffic, and whether the MediaStack applications are deployed individually (per file), or collectively as a group (single file).
 
-|                                                                                                                                                 | Each Docker container / application is deployed individually using multiple YAML configurations - suits new users. | Deploys all Docker containers / applications and the "mediastack" network all from the one YAML configuration - suits advanced users. |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption           | full-vpn_multiple-yaml                                                                                                                                                                                                                      | full-vpn_single-yaml                                                                           |
-| Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency | min-vpn_multiple-yaml                                                                                                                                                                                                                       | min-vpn_single-yaml                                                                            |
+| | Each Docker container / application is deployed individually using multiple YAML configurations - (suits new users) | Deploys all Docker containers / applications and the "mediastack" network all from the one YAML configuration - (suits advanced users) |  
+|:-|:-|:-|
+| All Docker containers send external Internet traffic routed through the Gluetun VPN container, to maximise overall network encryption | full-vpn_multiple-yaml | full-vpn_single-yaml |  
+| Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, to maximise overall network efficiency | min-vpn_multiple-yaml | min-vpn_single-yaml |  
 
+> NOTE: If you are using deploying the YAML files one at a time (multiple deployment), you MUST deploy the Gluetun Docker container first, as it sets up the "mediastack" network for all other Docker containers to join.
 
-> NOTE: If you are using deploying the YAML files one at a time (multiple deployment), you MUST deploy the Gluetun Docker container first, as it sets up the "mediastack" network for all other Docker containers to join. 
 > NOTE: You can swap between the different deployments as / whenever you need, however you will need to ensure any configuration settings made in the `docker-compose.env` file, are copied into the new deployment folder.  
 
 ---
