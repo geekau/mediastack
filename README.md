@@ -1,21 +1,5 @@
 # Docker MediaStack  
 
-<!--
-    -- Basic page style to center align the Mermaid diagrams on the page.  
--->
-
-<style>
-    .centered-diagram {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .mermaid {
-        text-align: center;
-    }
-</style>
-
 Welcome to the MediaStack project! MediaStack is your ultimate solution for managing and streaming media collections with applications like Jellyfin and Plex. Using Docker, MediaStack containerises these media servers alongside *ARR applications (Radarr, Sonarr, Lidarr, etc.) for seamless media automation and management.  
 
 You will be able to connect to the Docker MediaStack from the Internet using SWAG, which handles reverse proxy and web server tasks, ensuring secure and efficient traffic management. Authelia provides robust authentication to protect your remote access, and Heimdall serves as a convenient portal for accessing all your Docker applications in one place. Additionally, MediaStack leverages Cloudflare's Zero Trust and proxy services, ensuring that remote access to your media is both secure and reliable. This setup provides two-factor authentication (2FA) and single sign-on (SSO) capabilities, ensuring that users must verify their identities before gaining access, so you know you can remotely share your Docker applications, with the confidence that your collections are protected.  
