@@ -12,6 +12,8 @@ Discusson and assistance can be sort at: [MediaStack on Reddit](https://www.redd
 
 > NOTE: Docker, and your MediaStack, can be installed on Windows, Linux, MacOS, and even NAS appliances such as Synology. All of the steps to configure Docker for your Operating System environment, are located on the main MediaStack.Guide website.  
 
+> NOTE: The MediaStack YAML files will install both **Jellyfin** and **Plex** media players, so you have more options to choose from, however you really only need the own media player, so you can either disable or uninstall the media player you do not wish to keep.  
+ 
 </br>
 
 ## TL;DR  
