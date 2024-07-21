@@ -1,4 +1,4 @@
-# Docker Media Stack: min-vpn_single-yaml
+# MediaStack Project (Docker) - min-vpn_single-yaml  
 
 Go to: [https://github.com/geekau/mediastack](https://github.com/geekau/mediastack)
 
@@ -6,26 +6,99 @@ Download the full "mediastack" repository to your computer by selecting "**Code*
 
 Extract the downloaded zip file, then go to the directory which suits your deployment method
 
-Follow the deployment instructions at: [https://MediaStack.Guide](https://MediaStack.Guide)
+Full deployment and configuration instructions are located at: [https://MediaStack.Guide](https://MediaStack.Guide)
 
----
+</br>
 
 ## What is "min-vpn_single-yaml"?
 
-Only the qBittorrent container sends external Internet traffic routed through the Gluetun VPN container, all other Docker containers send their Internet traffic directly out your home Internet connection. If there is no active VPN connection, then only the qBittorrent container stops sending Internet traffic. This is the fastest and most efficient network connection setup, as only Torrent traffic uses the VPN, however it is not the most secure overall.
+This directory contains the configuration to deploy the MediaStack in a minimal Secure VPN architecture, where only the qBittorrent client is using the VPN, and all other network traffic is sent straight out via your ISP's network connection.
 
-This build has all of the applications combined into a "single" Docker Compose build configuration file (YAML), so all Docker applications / containers are deployed at once, rather than individual deployments.
+This configuration uses one YAML file to deploy over 20 Docker containers. While it is only one file to deploy the entire MediaStack Project, it can be difficult to troubleshoot when there are configuration issues that need to be debugged.
 
-The single deployment method is ideal for advanced users who are confident their Docker stack configuration  and also allows for easy testing and fault finding when deployment issues occur.
+Single YAML configuration is **recommended for advanced Docker users.**
 
-> NOTE: All incoming Internet traffic still goes through Cloudflare DNS and Zero Trust Network Access services, so the network configuration for SWAG (reverse proxy), Authelia, Heimdall and DDNS-Updater applications are not configured to use the Gluetun VPN, as Cloudflare will proxy your inbound Internet traffic directly to your IP Address / Internet connection. SWAG is build to secure all inbound network traffic from the Internet, refer to [https://MediaStack.Guide](https://MediaStack.Guide) for instructions on setting up Internet access to your internal Docker environment.
+</br>
+<br>
 
+## Minimal VPN Network Security
+
+This configuration set builds a minimal encrypted VPN network, soley for the BitTorrent network traffic coming from qBittorrent, which routes network traffic through the Gluetun Docker container, where it is encrypted into a VPN before routing out to the Internet. All other Docker containers connect to the Docker bridge network (not Gluetun), and pass their network traffic directly out to the Internet though your Internet Service Provider. This approach ensures that only the BitTorrent data is encrypted, while other containers operate with unencrypted traffic flows. The advantage here is that it maintains higher network performance for most applications, avoiding the latency and bandwidth reductions associated with full encryption.  
+
+However, this comes at the cost of leaving some network traffic potentially exposed to interception or monitoring. This setup is suitable for users who require high performance for certain applications but still want to protect specific, sensitive activities.  
+
+</br>
+<center>
+
+``` mermaid
+graph TD
+    subgraph DockerNet[<center>Docker Networking - 172.28.10.0/24</center>]
+        Jellyfin -..-> NIC
+        Plex -.-> NIC
+        Jellyseerr -..-> NIC
+        Prowlarr -.-> NIC
+        Radarr -..-> NIC
+        Readarr -.-> NIC
+        Sonarr -..-> NIC
+        Mylar3 -.-> NIC
+        Whisparr -..-> NIC
+        Bazarr -.-> NIC
+        Lidarr -..-> NIC
+        Tdarr -.-> NIC
+        SABnzbd -..-> NIC
+        NIC[Host Network Interface]
+        qBittorrent --- Gluetun
+    end
+    Gluetun ==>| Secure VPN | NIC
+    NIC -.->| Insecure Data | Gateway[<center>Home</p>Gateway</center>]
+    NIC ==>| Secure VPN | Gateway[<center>Home</p>Gateway</center>]
+    Gateway -.->| Insecure Data |Internet{<center>General</p>Internet</center>}
+    Gateway ==>|Secure VPN |VPN{<center>VPN Server</p>Anchor Point</center>}
+    
+    style Bazarr stroke:orange,stroke-width:2px
+    style Lidarr stroke:orange,stroke-width:2px
+    style Mylar3 stroke:orange,stroke-width:2px
+    style Prowlarr stroke:orange,stroke-width:2px
+    style Radarr stroke:orange,stroke-width:2px
+    style Readarr stroke:orange,stroke-width:2px
+    style Sonarr stroke:orange,stroke-width:2px
+    style Tdarr stroke:orange,stroke-width:2px
+    style Whisparr stroke:orange,stroke-width:2px
+    style Jellyfin stroke:orange,stroke-width:2px
+    style Plex stroke:orange,stroke-width:2px
+    style qBittorrent stroke:green,stroke-width:2px
+    style Jellyseerr stroke:orange,stroke-width:2px
+    style SABnzbd stroke:orange,stroke-width:2px
+    style Gluetun stroke:green,stroke-width:2px
+    style VPN stroke:green,stroke-width:2px
+    style Internet stroke:orange,stroke-width:2px
+```
+
+</center>
+<br><br>
+
+> NOTE: Many of the Docker applications are passing traffic through the Gluetun VPN container. When the Gluetun container stops, or if the VPN network connection is interrupted, then all network traffic for the other Docker applications, will also stop until the secure VPN connection is re-established.
+
+<br>
+
+### Single YAML File Deployment:  
+
+Advanced users often prefer a single YAML file as it encapsulates the entire network and application configurations in one place. This method simplifies management and ensures all services are deployed together, maintaining consistency and reducing the risk of configuration mismatches. However, this approach requires a deep understanding of Docker and YAML syntax, as a single error can disrupt the deployment of all services.  
+
+Example:  
+
+```
+vi docker-compose.env
+sudo docker compose --file docker-compose-mediastack.yaml --env-file docker-compose.env up -d  
+```
+
+> NOTE: You must update the **`docker-compose.env`** file for your needs, prior to running **`docker compose`**.  
+
+</br>
 ---
 
-## TL;DR
+Follow the deployment instructions at: [https://MediaStack.Guide](https://MediaStack.Guide)
 
-1. Update settings in `docker-compose.env` to suit your VPN account, local networking, and location of Docker Configuration Files / Media Storage
+See you on [Reddit for MediaStack](https://www.reddit.com/r/MediaStack/)
 
-2. Deploy entire Docker environment using the `docker-compose-media-stack.yaml` Docker Compose file
-
-3. Import `MediaStack.Guide Applications` bookmarks into your web browser, to easily access each application
+---

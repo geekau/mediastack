@@ -1,4 +1,4 @@
-# Docker MediaStack  
+# MediaStack Project (Docker)  
 
 Welcome to the MediaStack project! MediaStack is your ultimate solution for managing and streaming media collections with applications like Jellyfin and Plex. Using Docker, MediaStack containerises these media servers alongside *ARR applications (Radarr, Sonarr, Lidarr, etc.) for seamless media automation and management.  
 
@@ -29,6 +29,18 @@ Discusson and assistance can be sort at: [MediaStack on Reddit](https://www.redd
  - Deploy all Docker containers - If deploying containers individually, the Gluetun VPN container must be deployed first  
 
  - Update and import the "**MediaStack.Guide Applications**" bookmarks file into your web browser to easily access each application's WebUI portal  
+
+</br>
+
+## What Is Docker And How Do I Use It
+
+Docker is an open-source platform designed to automate the deployment, scaling, and management of applications using containerisation. Containers are lightweight, standalone, and executable software packages that include everything needed to run a piece of software, including the code, runtime, libraries, and system dependencies. Unlike traditional virtual machines, containers share the host computer's kernel, making them more efficient and faster to start up. This ensures that applications run consistently across different environments.
+
+One of the key benefits of Docker is its cross-platform compatibility. Docker containers can run on any system that supports Docker, including various Linux distributions, Windows, and macOS. This MediaStack Project benefits the cross-platform architecture, as it can be deployed by more users, on more computers with different Operating Systems, which means MediaStack Project will work exactly the same, on many different computer systems.
+
+Here is a great introduction to Docker video, for those who are new to containerisation.
+
+<center><iframe width="560" height="315" src="https://www.youtube.com/embed/pg19Z8LL06w?si=NKWSIdJZAE5p0x3N" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></center>
 
 </br>
 
