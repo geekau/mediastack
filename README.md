@@ -450,6 +450,7 @@ sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-co
 sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d  
 
