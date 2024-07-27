@@ -1,30 +1,30 @@
 ###########################################################################
 ###########################################################################
 ##
-##    Docker Compose File: Heimdall (LinuxServer.io)
-##    Function: Organise links to web sites and web applications
+##  Docker Compose File: Homepage (https://ghcr.io/)
+##  Function: Application Dashboard
 ##
-##    Documentation: https://docs.linuxserver.io/images/docker-heimdall
-##    https://docs.linuxserver.io/general/swag#using-heimdall-as-the-home-page-at-domain-root
+##  Documentation: https://gethomepage.dev/latest/configs/
 ##
 ###########################################################################
 ###########################################################################
 services:
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
     restart: unless-stopped
+    ports:
+      - ${WEBUI_PORT_HOMEPAGE:?err}:3000
     volumes:
-      - ${FOLDER_FOR_DATA:?err}/heimdall:/config
+      - ${FOLDER_FOR_DATA:?err}/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-    ports:
-      - "${WEBUI_PORT_HEIMDALL:?err}:80"
 
-# NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
+# NOTE: Homepage MUST NOT connect to the Gluetun VPN container
 
 networks:
   default:
