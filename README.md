@@ -40,7 +40,11 @@ One of the key benefits of Docker is its cross-platform compatibility. Docker co
 
 Here is a great introduction to Docker video, for those who are new to containerisation.
 
-<center><iframe width="560" height="315" src="https://www.youtube.com/embed/pg19Z8LL06w?si=NKWSIdJZAE5p0x3N" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></center>
+<center>
+
+[![Docker Crash Course for Absolute Beginners](https://i.ytimg.com/vi/pg19Z8LL06w/hqdefault.jpg)](https://youtu.be/pg19Z8LL06w-Y?t=0s "Docker Crash Course for Absolute Beginners")
+
+</center>
 
 </br>
 
@@ -49,6 +53,8 @@ Here is a great introduction to Docker video, for those who are new to container
 The Docker applications located in the different directories are all extactly the same, however they differ on which Docker containers are secured via VPN for Internet traffic, and whether the MediaStack applications are deployed individually (**Multiple YAML files**), or collectively as a group (**Single YAML file**).  
 
 List of Docker applications used in MediaStack:
+
+</br>
 
 <center>
 
@@ -59,10 +65,11 @@ List of Docker applications used in MediaStack:
 | [DDNS-Updater](https://github.com/qdm12/ddns-updater) | DDNS-Updater automatically updates dynamic DNS records when your home Internet changes IP address |  
 | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Flaresolverr bypasses Cloudflare protection, allowing automated access to websites for scripts and bots |  
 | [Gluetun](https://github.com/qdm12/gluetun) | Gluetun routes network traffic through a VPN, ensuring privacy and security for Docker containers |  
-| [Heimdall](https://heimdall.site ) | Heimdall provides a dashboard to easily access and organise web applications and services |  
+| [Heimdall](https://heimdall.site) | Heimdall provides a dashboard to easily access and organise web applications and services |  
+| [Homepage](https://gethomepage.dev/) | Homepage is an alternate to Heimdall, providing a similar dashboard to easily access and organise web applications and services |  
 | [Jellyfin](https://jellyfin.org) | Jellyfin is a media server that organises, streams, and manages multimedia content for users |  
-| [Jellyseerr](https://github.com/Fallenbagel/jellyseerr ) | Jellyseerr is a request management tool for Jellyfin, enabling users to request and manage media content |  
-| [Lidarr](https://lidarr.audio ) | Lidarr is a Library Manager, automating the management and meta data for your music media files |  
+| [Jellyseerr](https://github.com/Fallenbagel/jellyseerr) | Jellyseerr is a request management tool for Jellyfin, enabling users to request and manage media content |  
+| [Lidarr](https://lidarr.audio) | Lidarr is a Library Manager, automating the management and meta data for your music media files |  
 | [Mylar3](https://github.com/mylar3/mylar3) | Mylar3 is a Library Manager, automating the management and meta data for your comic media files |  
 | [Plex](https://www.plex.tv) | Plex is a media server that organises, streams, and manages multimedia content across devices |  
 | [Portainer](https://www.portainer.io) | Portainer provides a graphical interface for managing Docker environments, simplifying container deployment and monitoring |  
@@ -71,6 +78,7 @@ List of Docker applications used in MediaStack:
 | [Radarr](https://radarr.video) | Radarr is a Library Manager, automating the management and meta data for your Movie media files |  
 | [Readarr](https://readarr.com) | is a Library Manager, automating the management and meta data for your eBooks and Comic media files |  
 | [SABnzbd](https://sabnzbd.org) | SABnzbd is a Usenet newsreader that automates the downloading of binary files from Usenet |  
+| [SMTP Relay](https://github.com/wodby/opensmtpd) | Integrated an SMTP Relay into the stack, for sending email notifications as needed |  
 | [Sonarr](https://sonarr.tv) | Sonarr is a Library Manager, automating the management and meta data for your TV Shows (series) media files |  
 | [SWAG](https://github.com/linuxserver/docker-swag) | SWAG (Secure Web Application Gateway) provides reverse proxy and web server functionalities with built-in security features |  
 | [Tdarr](https://tdarr.io) | Tdarr automates the transcoding and management of media files to optimise storage and playback compatibility |  
@@ -122,24 +130,24 @@ graph TD
     NIC ==>| Secure VPN | Gateway[<center>Home</br>Gateway</center>]
     Gateway ==>|Secure VPN |VPN{<center>VPN Server</br>Anchor Point</center>}
     
-    style Bazarr      stroke:#00FF33,stroke-width:2px
-    style Lidarr      stroke:#00FF33,stroke-width:2px
-    style Mylar3      stroke:#00FF33,stroke-width:2px
-    style Prowlarr    stroke:#00FF33,stroke-width:2px
-    style Radarr      stroke:#00FF33,stroke-width:2px
-    style Readarr     stroke:#00FF33,stroke-width:2px
-    style Sonarr      stroke:#00FF33,stroke-width:2px
-    style Tdarr       stroke:#00FF33,stroke-width:2px
-    style Whisparr    stroke:#00FF33,stroke-width:2px
-    style Jellyfin    stroke:#00FF33,stroke-width:2px
-    style Plex        stroke:#00FF33,stroke-width:2px
-    style qBittorrent stroke:#00FF33,stroke-width:2px
-    style Jellyseerr  stroke:#00FF33,stroke-width:2px
-    style SABnzbd     stroke:#00FF33,stroke-width:2px
-    style Gluetun     stroke:#00FF33,stroke-width:2px
-    style NIC         stroke:#00FF33,stroke-width:2px
-    style Gateway     stroke:#00FF33,stroke-width:2px
-    style VPN         stroke:#00FF33,stroke-width:2px
+    style Bazarr      stroke:green,stroke-width:2px
+    style Lidarr      stroke:green,stroke-width:2px
+    style Mylar3      stroke:green,stroke-width:2px
+    style Prowlarr    stroke:green,stroke-width:2px
+    style Radarr      stroke:green,stroke-width:2px
+    style Readarr     stroke:green,stroke-width:2px
+    style Sonarr      stroke:green,stroke-width:2px
+    style Tdarr       stroke:green,stroke-width:2px
+    style Whisparr    stroke:green,stroke-width:2px
+    style Jellyfin    stroke:green,stroke-width:2px
+    style Plex        stroke:green,stroke-width:2px
+    style qBittorrent stroke:green,stroke-width:2px
+    style Jellyseerr  stroke:green,stroke-width:2px
+    style SABnzbd     stroke:green,stroke-width:2px
+    style Gluetun     stroke:green,stroke-width:2px
+    style NIC         stroke:green,stroke-width:2px
+    style Gateway     stroke:green,stroke-width:2px
+    style VPN         stroke:green,stroke-width:2px
 ```
 </center>
 <br><br>
@@ -182,25 +190,25 @@ graph TD
     Gateway -.->| Insecure</br>Data |Internet{<center>General</br>Internet</center>}
     Gateway ==>|Secure</br>VPN |VPN{<center>VPN Server</br>Anchor Point</center>}
     
-    style Bazarr      stroke:#FF5C00,stroke-width:2px
-    style Lidarr      stroke:#FF5C00,stroke-width:2px
-    style Mylar3      stroke:#FF5C00,stroke-width:2px
-    style Prowlarr    stroke:#FF5C00,stroke-width:2px
-    style Radarr      stroke:#FF5C00,stroke-width:2px
-    style Readarr     stroke:#FF5C00,stroke-width:2px
-    style Sonarr      stroke:#FF5C00,stroke-width:2px
-    style Tdarr       stroke:#FF5C00,stroke-width:2px
-    style Whisparr    stroke:#FF5C00,stroke-width:2px
-    style Jellyfin    stroke:#FF5C00,stroke-width:2px
-    style Plex        stroke:#FF5C00,stroke-width:2px
-    style qBittorrent stroke:#00FF33,stroke-width:2px
-    style Jellyseerr  stroke:#FF5C00,stroke-width:2px
-    style SABnzbd     stroke:#FF5C00,stroke-width:2px
-    style Gluetun     stroke:#00FF33,stroke-width:2px
-    style VPN         stroke:#00FF33,stroke-width:2px
-    style NIC         stroke:#0088FF,stroke-width:2px
-    style Gateway     stroke:#0088FF,stroke-width:2px
-    style Internet    stroke:#FF5C00,stroke-width:2px
+    style Bazarr      stroke:orange,stroke-width:2px
+    style Lidarr      stroke:orange,stroke-width:2px
+    style Mylar3      stroke:orange,stroke-width:2px
+    style Prowlarr    stroke:orange,stroke-width:2px
+    style Radarr      stroke:orange,stroke-width:2px
+    style Readarr     stroke:orange,stroke-width:2px
+    style Sonarr      stroke:orange,stroke-width:2px
+    style Tdarr       stroke:orange,stroke-width:2px
+    style Whisparr    stroke:orange,stroke-width:2px
+    style Jellyfin    stroke:orange,stroke-width:2px
+    style Plex        stroke:orange,stroke-width:2px
+    style qBittorrent stroke:green,stroke-width:2px
+    style Jellyseerr  stroke:orange,stroke-width:2px
+    style SABnzbd     stroke:orange,stroke-width:2px
+    style Gluetun     stroke:green,stroke-width:2px
+    style VPN         stroke:green,stroke-width:2px
+    style NIC         stroke:blue,stroke-width:2px
+    style Gateway     stroke:blue,stroke-width:2px
+    style Internet    stroke:orange,stroke-width:2px
 ```
 
 </center>
@@ -255,27 +263,27 @@ graph
     SMTP -.->      | Password</br>Resets                | NIC
     NIC -.->       | Password</br>Resets                | Gateway
 
-    style Authelia stroke:#00FF33,stroke-width:2px
-    style SWAG stroke:#00FF33,stroke-width:2px
-    style SMTP stroke:#00FF33,stroke-width:2px
-    style Homepage stroke:#00FF33,stroke-width:2px
-    style Remote stroke:#00FF33,stroke-width:2px
-    style Gateway stroke:#00FF33,stroke-width:2px
-    style DUO stroke:#00FF33,stroke-width:2px
-    style Tunnel stroke:#00FF33,stroke-width:2px
-    style Apps stroke:#00FF33,stroke-width:2px
-    style Docker stroke:#00FF33,stroke-width:2px
-    style NIC stroke:#00FF33,stroke-width:2px
+    style Authelia stroke:green ,stroke-width:2px
+    style SWAG stroke:green     ,stroke-width:2px
+    style SMTP stroke:green     ,stroke-width:2px
+    style Homepage stroke:green ,stroke-width:2px
+    style Remote stroke:green   ,stroke-width:2px
+    style Gateway stroke:green  ,stroke-width:2px
+    style DUO stroke:green      ,stroke-width:2px
+    style Tunnel stroke:green   ,stroke-width:2px
+    style Apps stroke:green     ,stroke-width:2px
+    style Docker stroke:green   ,stroke-width:2px
+    style NIC stroke:green      ,stroke-width:2px
 
-    linkStyle 0 stroke:#FFA500,stroke-width:2px
-    linkStyle 1 stroke:#0088FF,stroke-width:2px
-    linkStyle 4 stroke:#0088FF,stroke-width:2px
-    linkStyle 9 stroke:#FFA500,stroke-width:2px
-    linkStyle 10 stroke:#FFA500,stroke-width:2px
-    linkStyle 11 stroke:#FFA500,stroke-width:2px
-    linkStyle 12 stroke:#FFA500,stroke-width:2px
-    linkStyle 14 stroke:#0088FF,stroke-width:2px
-    linkStyle 15 stroke:#0088FF,stroke-width:2px
+    linkStyle 0 stroke:#FFA500  ,stroke-width:2px
+    linkStyle 1 stroke:#0088FF  ,stroke-width:2px
+    linkStyle 4 stroke:#0088FF  ,stroke-width:2px
+    linkStyle 9 stroke:#FFA500  ,stroke-width:2px
+    linkStyle 10 stroke:#FFA500 ,stroke-width:2px
+    linkStyle 11 stroke:#FFA500 ,stroke-width:2px
+    linkStyle 12 stroke:#FFA500 ,stroke-width:2px
+    linkStyle 14 stroke:#0088FF ,stroke-width:2px
+    linkStyle 15 stroke:#0088FF ,stroke-width:2px
 
 
 ```  
@@ -346,9 +354,9 @@ Understanding how to access the Docker applications within your own home network
 
 Imagine the following deployment scenario:  
 
- - **User 1** has deployed their Docker applications using the "**Minimum VPN**" YAML files, so only the qBittorrent container is using the Gluetun VPN to encrypt network traffic to the Internet. Therefore, **User 1** accesses the **Jellyfin** application directly, with the URL of: **https://jellyfin:8096**.  
+ - **User 1** has deployed their Docker applications using the "**Minimum VPN**" YAML files, so only the qBittorrent container is using the Gluetun VPN to encrypt network traffic to the Internet. Therefore, **User 1** accesses the **Jellyfin** application directly, with the URL of: **http://jellyfin:8096**.  
 
- - **User 2** has deployed their Docker applications using the "**Full VPN**" YAML files, which has all of the "Media Player" and "Downloading" Docker containers connecting to the Internet through the Gluetun VPN, encrypting all network traffic. Therefore, **User 2**  accesses the **Jellyfin** application by using the Gluetun container, which then uses port-redirection to forward the network traffic into Jellyfin. This URL will be: **https://gluetun:8096**.  
+ - **User 2** has deployed their Docker applications using the "**Full VPN**" YAML files, which has all of the "Media Player" and "Downloading" Docker containers connecting to the Internet through the Gluetun VPN, encrypting all network traffic. Therefore, **User 2**  accesses the **Jellyfin** application by using the Gluetun container, which then uses port-redirection to forward the network traffic into Jellyfin. This URL will be: **http://gluetun:8096**.  
 
 The YAML configuration files are already set up to do all the network firewalling, port forwarding, and VPN connections as standard, all that most people will need to do, it just update the **`docker-compose.env`** file and update all the IP Addresses for VPN login details for your own environment.  
 
@@ -471,6 +479,8 @@ sudo -E mkdir -p $FOLDER_FOR_MEDIA/watch
 sudo -E chmod -R 775 $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
 sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
 ```
+
+</br>
 
 > You can deploy the MediaStack Docker on other operating systems, such as Windows / Synology. Visit the [MediaStack.Guide](https://MediaStack.Guide) website to get the scripts to create the directory structure on Windows, MacOS, and Synology operating systems.
 
@@ -629,7 +639,7 @@ Managing Docker via the CLI can be complex and challenging, especially for users
 
 MediaStack includes the "**Community Edition**" of Portainer, which offers a user-friendly alternative to CLI, by providing a graphical web application to manage Docker environments. With Portainer, users can easily deploy, configure, and monitor Docker containers through an intuitive interface. This reduces the complexity and learning curve associated with the CLI, making Docker management accessible and efficient for both beginners and experienced users. Portainer simplifies Docker operations, enhances productivity, and improves overall user experience.  
 
-You can access your Portainer instance at: [https://localhost:9443](https://localhost:9443)  
+You can access your Portainer instance at: [http://localhost:9000](http://localhost:9000)  
 
 </br>  
 
