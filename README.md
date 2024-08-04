@@ -283,11 +283,60 @@ graph
 </center>
 <br><br>
 
-## What If I Don't Want Remote Access
+## What If I Don't Want Remote Access  
 
 All of the MediaStack Docker configurations deploy the Docker applications necessary to set up remote access into your home network, however, the remote access will only work if you configure the Docker environment with a valid domain name (DNS or DDNS), your Home Gateway is configured to port-forward network traffic into your home network, and you set up authentication with Authelia and Cloudflare Zero Trust.  
 
 So, while all Docker configurations deploy the Remote Access applications, the Remote Access will not work unless you follow the additional instructions to set up the authentication and access requirements. Therefore, if you don't want remote access, you can still safely install all of the Docker YAML configurations currently how they are now, without automatically granting Remote Access to your home network.  
+
+</br>  
+
+## What If I Don't Want To Use the Gluetun VPN  
+
+Gluetun is the preferred choice for VPN, as it can route as many of the Docker containers through the VPN, or none at all. But more importantly, when Gluetun or the VPN tunnel stops, then all network traffic stops going out to the Internet, until the VPN connection is re-established.  
+
+However, if you already have your own solution for VPN which you prefer to run, then it is recommended you use the **min-vpn_mulitple-yaml** configurations. This stack still has Gluetun VPN, but it only has the qBittorrent container using it, all other docker containers are just connecting directly to the "mediastack" docker bridge network.  
+
+The **`docker-compose.env`** file is exactly the same in all configuration directories, so you can just move it over to the **min-vpn_mulitple-yaml** directory and run the commands again.  
+
+Quickest way to set up without VPN, would be to:  
+
+ - Deploy Gluetun container (as temporary step)  
+ - Deploy qBittorent container  
+ - Change qBittorrent to "mediastack" network  
+ - Shutdown / remove the Gluetun container  
+
+These steps should get you running without VPN, we just need to run Gluetun first as it has the network stack in it, but the Gluetun container can be removed once the network is up:  
+
+```
+sudo docker compose --file docker-compose-gluetun.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-qbittorrent.yaml --env-file docker-compose.env up -d  
+sudo docker network connect mediastack qbittorrent  
+sudo docker container stop gluetun  
+sudo docker container rm gluetun   
+
+... load remaining docker containers ...
+```
+
+Now all of your containers will be running unencrypted network traffic out of Docker, you will need to ensure you can route this traffic through your own VPN.  
+
+You can check the IP Address on your qBittorrent container, to validate whether it is using your own ISP' IP address, or your VPN's IP address with the following commands - the commands are the same, not all containers have curl or wget available, so these should cover all options.  
+
+```
+sudo docker exec -it gluetun /bin/sh -c "curl ifconfig.me"  
+sudo docker exec -it gluetun /bin/sh -c "wget -qO- ifconfig.me"  
+```
+
+Then lookup the location of your IP Address with [https://iplocation.net](https://iplocation.net), this will tell you if you're succefully connected to your remote VPN anchor point.  
+
+If you already have a successful remote access connection into your home network, then when you run the docker compose commands, you will not need to run the following commands; you won't need these Docker containers:  
+
+```
+sudo docker compose --file docker-compose-swag.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-authelia.yaml --env-file docker-compose.env up -d  
+```
+
+Hopefully this will get you to where you need your desired configuation. This info will eventually get into https://MediaStack.Guide and become part of the main documentation, so others can follow if they don't need VPN.  
 
 </br>
 
