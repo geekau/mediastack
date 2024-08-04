@@ -97,6 +97,7 @@ This configuration set builds a fully encrypted VPN network architecture, and ro
 However, this heightened security method comes with trade-offs. Encrypting and decrypting all traffic can lead to increased latency and reduced network speeds. This can particularly impact applications requiring high bandwidth or low latency, such as media streaming or real-time communication tools. Nonetheless, for users prioritising privacy and security over speed, this setup is ideal.  
 
 </br>
+<center>
 
 ``` mermaid
 graph TD
@@ -114,33 +115,33 @@ graph TD
         Lidarr ---- Gluetun
         Tdarr --- Gluetun
         SABnzbd ---- Gluetun
-        NIC[Host Network Interface]
+        NIC[Docker Host</br>Network Bridge]
         qBittorrent ---- Gluetun
     end
     Gluetun ==>| Secure VPN | NIC
-    NIC ==>| Secure VPN | Gateway[<center>Home</p>Gateway</center>]
-    Gateway ==>|Secure VPN |VPN{<center>VPN Server</p>Anchor Point</center>}
+    NIC ==>| Secure VPN | Gateway[<center>Home</br>Gateway</center>]
+    Gateway ==>|Secure VPN |VPN{<center>VPN Server</br>Anchor Point</center>}
     
-    style Bazarr stroke:green,stroke-width:2px
-    style Lidarr stroke:green,stroke-width:2px
-    style Mylar3 stroke:green,stroke-width:2px
-    style Prowlarr stroke:green,stroke-width:2px
-    style Radarr stroke:green,stroke-width:2px
-    style Readarr stroke:green,stroke-width:2px
-    style Sonarr stroke:green,stroke-width:2px
-    style Tdarr stroke:green,stroke-width:2px
-    style Whisparr stroke:green,stroke-width:2px
-    style Jellyfin stroke:green,stroke-width:2px
-    style Plex stroke:green,stroke-width:2px
-    style qBittorrent stroke:green,stroke-width:2px
-    style Jellyseerr stroke:green,stroke-width:2px
-    style SABnzbd stroke:green,stroke-width:2px
-    style Gluetun stroke:green,stroke-width:2px
-    style NIC stroke:green,stroke-width:2px
-    style Gateway stroke:green,stroke-width:2px
-    style VPN stroke:green,stroke-width:2px
+    style Bazarr      stroke:#00FF33,stroke-width:2px
+    style Lidarr      stroke:#00FF33,stroke-width:2px
+    style Mylar3      stroke:#00FF33,stroke-width:2px
+    style Prowlarr    stroke:#00FF33,stroke-width:2px
+    style Radarr      stroke:#00FF33,stroke-width:2px
+    style Readarr     stroke:#00FF33,stroke-width:2px
+    style Sonarr      stroke:#00FF33,stroke-width:2px
+    style Tdarr       stroke:#00FF33,stroke-width:2px
+    style Whisparr    stroke:#00FF33,stroke-width:2px
+    style Jellyfin    stroke:#00FF33,stroke-width:2px
+    style Plex        stroke:#00FF33,stroke-width:2px
+    style qBittorrent stroke:#00FF33,stroke-width:2px
+    style Jellyseerr  stroke:#00FF33,stroke-width:2px
+    style SABnzbd     stroke:#00FF33,stroke-width:2px
+    style Gluetun     stroke:#00FF33,stroke-width:2px
+    style NIC         stroke:#00FF33,stroke-width:2px
+    style Gateway     stroke:#00FF33,stroke-width:2px
+    style VPN         stroke:#00FF33,stroke-width:2px
 ```
-
+</center>
 <br><br>
 
 > NOTE: Many of the Docker applications are passing traffic through the Gluetun VPN container. When the Gluetun container stops, or if the VPN network connection is interrupted, then all network traffic for the other Docker applications, will also stop until the secure VPN connection is re-established.
@@ -154,6 +155,7 @@ This configuration set builds a minimal encrypted VPN network, soley for the Bit
 However, this comes at the cost of leaving some network traffic potentially exposed to interception or monitoring. This setup is suitable for users who require high performance for certain applications but still want to protect specific, sensitive activities.  
 
 </br>
+<center>
 
 ``` mermaid
 graph TD
@@ -171,34 +173,37 @@ graph TD
         Lidarr -..-> NIC
         Tdarr -.-> NIC
         SABnzbd -..-> NIC
-        NIC[Host Network Interface]
+        NIC[Docker Host</br>Network Bridge]
         qBittorrent --- Gluetun
     end
-    Gluetun ==>| Secure VPN | NIC
-    NIC -.->| Insecure Data | Gateway[<center>Home</p>Gateway</center>]
-    NIC ==>| Secure VPN | Gateway[<center>Home</p>Gateway</center>]
-    Gateway -.->| Insecure Data |Internet{<center>General</p>Internet</center>}
-    Gateway ==>|Secure VPN |VPN{<center>VPN Server</p>Anchor Point</center>}
+    Gluetun ==>| Secure</br>VPN | NIC
+    NIC -.->| Insecure</br>Data | Gateway[<center>Home</br>Gateway</center>]
+    NIC ==>| Secure</br>VPN | Gateway[<center>Home</br>Gateway</center>]
+    Gateway -.->| Insecure</br>Data |Internet{<center>General</br>Internet</center>}
+    Gateway ==>|Secure</br>VPN |VPN{<center>VPN Server</br>Anchor Point</center>}
     
-    style Bazarr stroke:orange,stroke-width:2px
-    style Lidarr stroke:orange,stroke-width:2px
-    style Mylar3 stroke:orange,stroke-width:2px
-    style Prowlarr stroke:orange,stroke-width:2px
-    style Radarr stroke:orange,stroke-width:2px
-    style Readarr stroke:orange,stroke-width:2px
-    style Sonarr stroke:orange,stroke-width:2px
-    style Tdarr stroke:orange,stroke-width:2px
-    style Whisparr stroke:orange,stroke-width:2px
-    style Jellyfin stroke:orange,stroke-width:2px
-    style Plex stroke:orange,stroke-width:2px
-    style qBittorrent stroke:green,stroke-width:2px
-    style Jellyseerr stroke:orange,stroke-width:2px
-    style SABnzbd stroke:orange,stroke-width:2px
-    style Gluetun stroke:green,stroke-width:2px
-    style VPN stroke:green,stroke-width:2px
-    style Internet stroke:orange,stroke-width:2px
+    style Bazarr      stroke:#FF5C00,stroke-width:2px
+    style Lidarr      stroke:#FF5C00,stroke-width:2px
+    style Mylar3      stroke:#FF5C00,stroke-width:2px
+    style Prowlarr    stroke:#FF5C00,stroke-width:2px
+    style Radarr      stroke:#FF5C00,stroke-width:2px
+    style Readarr     stroke:#FF5C00,stroke-width:2px
+    style Sonarr      stroke:#FF5C00,stroke-width:2px
+    style Tdarr       stroke:#FF5C00,stroke-width:2px
+    style Whisparr    stroke:#FF5C00,stroke-width:2px
+    style Jellyfin    stroke:#FF5C00,stroke-width:2px
+    style Plex        stroke:#FF5C00,stroke-width:2px
+    style qBittorrent stroke:#00FF33,stroke-width:2px
+    style Jellyseerr  stroke:#FF5C00,stroke-width:2px
+    style SABnzbd     stroke:#FF5C00,stroke-width:2px
+    style Gluetun     stroke:#00FF33,stroke-width:2px
+    style VPN         stroke:#00FF33,stroke-width:2px
+    style NIC         stroke:#0088FF,stroke-width:2px
+    style Gateway     stroke:#0088FF,stroke-width:2px
+    style Internet    stroke:#FF5C00,stroke-width:2px
 ```
 
+</center>
 <br><br>
 
 ## Secure Remote Network Access  
@@ -214,41 +219,68 @@ Authelia, integrated with both SWAG and Cloudflare Zero Trust, handles user auth
 By combining these technologies, the setup ensures a secure, scalable, and manageable remote access solution. The network protects against unauthorized access while providing legitimate users with seamless access to the necessary applications, thus balancing security with user convenience.
 
 </br>
+<center>
 
 ``` mermaid  
-graph LR
+graph
     subgraph DockerNet[<center>Docker Networking - 172.28.10.0/24</center>]
         Authelia
+        SMTP[SMTP</br>Relay]
         SWAG
-        Heimdall -->| Remote Access | Docker{Docker</p>Applications}
-        Heimdall -->| Remote Access | Apps{Internal Network</p>Access}
-        NIC[Host Network Interface]
+        NIC[Docker Host</br>Network Bridge]
+        Homepage
+        Docker{Docker</br>Applications}
+        Apps{Internal Network</br>Access}
     end
     subgraph Internet[<center>Internet Zone</center>]
-        Remote[ Remote</p>Internet Users ] -->| Remote Access</p>HTTPS to SWAG | Proxy{<center>Cloudflare</p>Proxy</center>}
-        Cloudflare{<center>Cloudflare</p>Zero Trust</center>}
+        Remote[ Remote</br>Internet Users ]
+        Tunnel{<center>Cloudflare</br>Tunnel</center>}
+        DUO{<center>DUO Security</br>2FA</center>}
     end
-    Proxy -->   | Remote Access</p>HTTPS to SWAG | Gateway[Home Gateway]
-    Gateway --> | Remote Access | NIC
-    NIC -->     | Remote Access | SWAG
-    Authelia <-.-> | Auth | NIC
-    Authelia <-.-> | Auth | SWAG
-    NIC <-.-> | Auth | Gateway
-    Gateway <-.-> | Auth | Cloudflare
-    SWAG -->| Authenticated Users | Heimdall
+    Gateway[Home Gateway]
+    Remote <-.->   | Push</br>Notifications             | DUO
+    Authelia -.->  | Password</br>Resets                | SMTP
+    Homepage ==>   | Remote</br>Access                  | Docker
+    Homepage ==>   | Remote</br>Access                  | Apps
+    Gateway -.->   | Password</br>Resets                | Remote
+    Tunnel ==>     | Remote Access</br>HTTPS to SWAG    | Gateway
+    Remote ==>     | Remote Access</br>HTTPS to SWAG    | Tunnel
+    Gateway ==>    | Remote</br>Access                  | NIC
+    NIC ==>        | Remote</br>Access                  | SWAG
+    Authelia <-.-> | Auth                               | NIC
+    Authelia <-.-> | Auth                               | SWAG
+    NIC <-.->      | Auth                               | Gateway
+    Gateway <-.->  | Auth                               | DUO
+    SWAG ==>       | Authenticated Users                | Homepage
+    SMTP -.->      | Password</br>Resets                | NIC
+    NIC -.->       | Password</br>Resets                | Gateway
 
-    style Authelia stroke:green,stroke-width:2px
-    style SWAG stroke:green,stroke-width:2px
-    style Heimdall stroke:green,stroke-width:2px
-    style Remote stroke:green,stroke-width:2px
-    style Gateway stroke:green,stroke-width:2px
-    style Cloudflare stroke:green,stroke-width:2px
-    style Proxy stroke:green,stroke-width:2px
-    style Apps stroke:green,stroke-width:2px
-    style Docker stroke:green,stroke-width:2px
-    style NIC stroke:green,stroke-width:2px
+    style Authelia stroke:#00FF33,stroke-width:2px
+    style SWAG stroke:#00FF33,stroke-width:2px
+    style SMTP stroke:#00FF33,stroke-width:2px
+    style Homepage stroke:#00FF33,stroke-width:2px
+    style Remote stroke:#00FF33,stroke-width:2px
+    style Gateway stroke:#00FF33,stroke-width:2px
+    style DUO stroke:#00FF33,stroke-width:2px
+    style Tunnel stroke:#00FF33,stroke-width:2px
+    style Apps stroke:#00FF33,stroke-width:2px
+    style Docker stroke:#00FF33,stroke-width:2px
+    style NIC stroke:#00FF33,stroke-width:2px
+
+    linkStyle 0 stroke:#FFA500,stroke-width:2px
+    linkStyle 1 stroke:#0088FF,stroke-width:2px
+    linkStyle 4 stroke:#0088FF,stroke-width:2px
+    linkStyle 9 stroke:#FFA500,stroke-width:2px
+    linkStyle 10 stroke:#FFA500,stroke-width:2px
+    linkStyle 11 stroke:#FFA500,stroke-width:2px
+    linkStyle 12 stroke:#FFA500,stroke-width:2px
+    linkStyle 14 stroke:#0088FF,stroke-width:2px
+    linkStyle 15 stroke:#0088FF,stroke-width:2px
+
+
 ```  
 
+</center>
 <br><br>
 
 ## What If I Don't Want Remote Access
@@ -272,20 +304,21 @@ Imagine the following deployment scenario:
 The YAML configuration files are already set up to do all the network firewalling, port forwarding, and VPN connections as standard, all that most people will need to do, it just update the **`docker-compose.env`** file and update all the IP Addresses for VPN login details for your own environment.  
 
 </br>
+<center>
 
 ``` mermaid
 graph TB
     subgraph HomeNet[<center>Home Network - 192.168.1.0/24</center>]
-        1[<center>User 1</center>]-.->NIC
-        2[<center>User 2</center>]-->NIC
-        NIC -.-> Jellyfin
-        NIC[<center>Docker Host</p>192.168.1.10</center>] --> Gluetun
+        1[<center>User 1</center>]-.-> | Port</br>8096 | NIC
+        2[<center>User 2</center>]-->| Port</br>8096 | NIC
+        NIC -.-> | Port</br>8096 | Jellyfin
+        NIC[<center>Docker Host</br>Network Bridge</br>192.168.1.10</center>] --> | Port</br>8096 | Gluetun
 
         subgraph DockerNet[<center>Docker Network - 172.28.10.0/24</center>]
             Gluetun
-            Jellyfin[<center>Jellyfin</p>HTTPS:8096</center>]
+            Jellyfin[<center>Jellyfin</br>HTTP:8096</center>]
         end
-    Gluetun --> Jellyfin
+    Gluetun --> | Port</br>8096 | Jellyfin
     end
 
 style 1 stroke:green,stroke-width:2px
@@ -295,6 +328,7 @@ style Gluetun stroke:green,stroke-width:2px
 style Jellyfin stroke:green,stroke-width:2px
 ```
 
+</center>
 </br></br>
 
 The network settings for your home network, and the Docker network, can be adjusted in the **`docker-compose.env`** file. Likewise, if the Gluetun container is routing outbound VPN traffic for any of the Docker applications, it can also accept inbound network traffic and re-route the traffic to any of the Docker containers connected to the Gluetun VPN, based on the port redirect rules in the Gluetun YAML file.
@@ -380,7 +414,7 @@ export FOLDER_FOR_DATA=/mediastackdata
 export PUID=1000  
 export PGID=1000  
 
-sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia,bazarr,ddns-updater,gluetun,heimdall,jellyfin,jellyseerr,lidarr,mylar3,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
+sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia,bazarr,ddns-updater,gluetun,heimdall,jellyfin,jellyseerr,lidarr,mylar3,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audio,books,comics,movies,music,photos,series,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,series,software,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,series,software,xxx}  
@@ -426,35 +460,37 @@ Example:
 
 ```
 vi docker-compose.env
-sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-smtp.yaml         --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d
 
-sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d
 ```
 
 Additionally, if there are some Docker applications you do not want to run in your MediaStack, then you just don't run the **`docker compose`** command for these applications.
