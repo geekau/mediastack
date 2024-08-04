@@ -22,8 +22,8 @@ services:
       - ${FOLDER_FOR_MEDIA:?err}/media:/data/media
     ports:
       - "${WEBUI_PORT_PLEX:?err}:32400"
-      - 1900:1900/udp
-      - 5353:5353/udp
+#      - 1900:1900/udp
+#      - 5353:5353/udp
       - 8324:8324
       - 32410:32410/udp
       - 32412:32412/udp

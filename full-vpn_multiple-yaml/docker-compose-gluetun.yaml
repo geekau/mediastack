@@ -55,8 +55,8 @@ services:
       - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
 
       - "${WEBUI_PORT_PLEX:?err}:32400"         # WebUI Portal: Plex
-      - 1900:1900/udp                           # DNLA Service
-      - 5353:5353/udp                           # Plex Network Port
+#      - 1900:1900/udp                           # DNLA Service
+#      - 5353:5353/udp                           # Plex Network Port
       - 8324:8324                               # Plex Network Port
       - 32410:32410/udp                         # Plex Network Port
       - 32412:32412/udp                         # Plex Network Port
