@@ -25,11 +25,11 @@ services:
       - OPENSMTPD_MAX_MESSAGE_SIZE=50M
       - RELAY_HOST=${URL:?err}
       - RELAY_PROTO=smtp+tls
-      - RELAY_USER=${SMTP_USERNAME:?err}
-      - RELAY_PASSWORD=${SMTP_PASSWORD:?err}
+      - RELAY_USER=${SMTP_USERNAME}
+      - RELAY_PASSWORD=${SMTP_PASSWORD}
       - RELAY_PORT=${SMTP_PORT:?err}
 
-# NOTE: Homepage MUST NOT connect to the Gluetun VPN container
+# NOTE: SMTP Relay MUST NOT connect to the Gluetun VPN container
 
 networks:
   default:

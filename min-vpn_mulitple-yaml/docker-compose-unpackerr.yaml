@@ -39,7 +39,7 @@ services:
       - UN_SONARR_0_URL=http://sonarr:8989
       - UN_SONARR_0_API_KEY=
       - UN_SONARR_0_PATHS_0=/data/torrents/anime
-      - UN_SONARR_0_PATHS_1=/data/torrents/series
+      - UN_SONARR_0_PATHS_1=/data/torrents/tv
       - UN_SONARR_0_PROTOCOLS=torrent
       - UN_SONARR_0_TIMEOUT=10s
       - UN_SONARR_0_DELETE_ORIG=false
