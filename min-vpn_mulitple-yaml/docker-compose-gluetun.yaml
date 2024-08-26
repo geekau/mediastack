@@ -32,8 +32,7 @@ services:
       - "8388:8388/tcp"                         # Gluetun Local Network Shadowsocks
       - "8388:8388/udp"                         # Gluetun Local Network Shadowsocks
       - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"   # WebUI Portal: qBittorrent
-      - "${QBIT_PORT_TCP:?err}:6881/tcp"        # Transmission Torrent Port TCP
-      - "${QBIT_PORT_UDP:?err}:6881/udp"        # Transmission Torrent Port UDP
+      - "${QBIT_PORT:?err}:6881"                # Transmission Torrent Port
 
     volumes:
       - ${FOLDER_FOR_DATA:?err}/gluetun:/gluetun

@@ -47,8 +47,7 @@ services:
       - "${WEBUI_PORT_WHISPARR:?err}:6969"      # WebUI Portal: Whisparr
       - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"   # WebUI Portal: qBittorrent
 
-      - "${QBIT_PORT_TCP:?err}:6881/tcp"        # Transmission Torrent Port TCP
-      - "${QBIT_PORT_UDP:?err}:6881/udp"        # Transmission Torrent Port UDP
+      - "${QBIT_PORT:?err}:6881"                # Transmission Torrent Port
       - "${FLARESOLVERR_PORT:?err}:8191"        # Service Port: FlareSolverr
       
       - "${TDARR_SERVER_PORT:?err}:${TDARR_SERVER_PORT:?err}"   # Tdarr: Server Port
