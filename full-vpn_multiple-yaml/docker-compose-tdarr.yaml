@@ -19,8 +19,8 @@ services:
       - ${FOLDER_FOR_DATA:?err}/tdarr/server:/app/server
       - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
       - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
-      - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
-      - ${FOLDER_FOR_MEDIA:?err}:/data
+      - ${FOLDER_FOR_DATA:?err}/tdarr_transcode_cache:/temp
+      - ${FOLDER_FOR_MEDIA:?err}/media:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
@@ -49,8 +49,8 @@ services:
     volumes:
       - ${FOLDER_FOR_DATA:?err}/tdarr/configs:/app/configs
       - ${FOLDER_FOR_DATA:?err}/tdarr/logs:/app/logs
-      - ${FOLDER_FOR_MEDIA:?err}/media/tdarr_transcode_cache:/temp
-      - ${FOLDER_FOR_MEDIA:?err}:/data
+      - ${FOLDER_FOR_DATA:?err}/tdarr_transcode_cache:/temp
+      - ${FOLDER_FOR_MEDIA:?err}/media:/data
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
