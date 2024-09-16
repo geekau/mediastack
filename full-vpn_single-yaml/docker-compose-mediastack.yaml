@@ -33,10 +33,12 @@ services:
       - "8888:8888/tcp"                         # Gluetun Local Network HTTP proxy
       - "8388:8388/tcp"                         # Gluetun Local Network Shadowsocks
       - "8388:8388/udp"                         # Gluetun Local Network Shadowsocks
+      - ${GLUETUN_CONTROL_PORT:?err}:${GLUETUN_CONTROL_PORT:?err} # Gluetun Status Port
 
 # Comment out lines below if they are not going to use Gluetun VPN for Internet connection:
 
       - "${WEBUI_PORT_BAZARR:?err}:6767"        # WebUI Portal: Bazarr
+      - "${WEBUI_PORT_HOMARR:?err}:7575"        # WebUI Portal: Homarr
       - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
       - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
       - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
@@ -47,6 +49,8 @@ services:
       - "${WEBUI_PORT_SABNZBD:?err}:8080"       # WebUI Portal: SABnzbd
       - "${WEBUI_PORT_SONARR:?err}:8989"        # WebUI Portal: Sonarr
       - "${WEBUI_PORT_WHISPARR:?err}:6969"      # WebUI Portal: Whisparr
+
+      - "${WEBUI_PORT_FILEBOT:?err}:${WEBUI_PORT_FILEBOT:?err}"           # WebUI Portal: Filebot
       - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"   # WebUI Portal: qBittorrent
 
       - "${QBIT_PORT:?err}:6881"                # Transmission Torrent Port
@@ -56,8 +60,8 @@ services:
       - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
 
       - "${WEBUI_PORT_PLEX:?err}:32400"         # WebUI Portal: Plex
-#      - 1900:1900/udp                           # DNLA Service
-#      - 5353:5353/udp                           # Plex Network Port
+#      - 1900:1900/udp                           # DNLA Service       (Clashes with Synology: SSPD "File Services" --> "Advanced")
+#      - 5353:5353/udp                           # Plex Network Port  (Clashes with Synology: Bonjour "File Services" --> "Advanced")
       - 8324:8324                               # Plex Network Port
       - 32410:32410/udp                         # Plex Network Port
       - 32412:32412/udp                         # Plex Network Port
@@ -70,6 +74,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
       - OPENVPN_USER=${VPN_USERNAME:?err}
@@ -81,6 +86,7 @@ services:
       - SERVER_CATEGORIES=${SERVER_CATEGORIES}
       - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
       - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
+      - HTTP_CONTROL_SERVER_ADDRESS=:${GLUETUN_CONTROL_PORT:?err}
       - VPN_TYPE=${VPN_TYPE}
       - VPN_ENDPOINT_IP=${VPN_ENDPOINT_IP}
       - VPN_ENDPOINT_PORT=${VPN_ENDPOINT_PORT}
@@ -181,7 +187,7 @@ services:
       - PUBLICIP_DNS_TIMEOUT=3s
       - HTTP_TIMEOUT=10s
       # Web UI
-      - LISTENING_PORT=${WEBUI_PORT_DDNS_UPDATER:?err}
+      - LISTENING_ADDRESS=:${WEBUI_PORT_DDNS_UPDATER:?err}
       - ROOT_URL=/
       # Backup
       - BACKUP_PERIOD=0 # 0 to disable
@@ -193,6 +199,37 @@ services:
 # NOTE: DDNS-Update MUST NOT connect to the Gluetun VPN container
     networks:
       - mediastack
+
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Filebot (GitHub)
+##  Function: Lookup and Rename Media from Internet Databases
+##
+##  Docker Page:   https://github.com/filebot/filebot-docker#filebot-xpra
+##  Homepage:      https://www.filebot.net/
+##  User Forum:    https://www.filebot.net/forums
+##
+###########################################################################
+###########################################################################
+services:
+  filebot:
+    image: rednoah/filebot:xpra
+    container_name: filebot
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DATA:?err}/filebot:/data/filebot
+      - ${FOLDER_FOR_MEDIA:?err}/filebot:/filebot
+    environment:
+#      - XPRA_AUTH=password:value=YOUR_PASSWORD
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - DARK_MODE=1
+    network_mode: "container:gluetun"
+#    ports:
+#      - "${WEBUI_PORT_FILEBOT:?err}:5454"             # Configured in Gluetun VPN container
 
 ###########################################################################
 ###########################################################################
@@ -241,10 +278,38 @@ services:
       - TZ=${TIMEZONE:?err}
     ports:
       - "${WEBUI_PORT_HEIMDALL:?err}:80"
-
 # NOTE: Heimdall MUST NOT connect to the Gluetun VPN container
     networks:
       - mediastack
+
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Homarr (https://ghcr.io/)
+##  Function: Application Dashboard
+##
+##  Documentation: https://homarr.dev/docs/getting-started/after-the-installation
+##
+###########################################################################
+###########################################################################
+services:
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/config
+      - ${FOLDER_FOR_DATA:?err}/homarr/icons:/app/public/icons
+      - ${FOLDER_FOR_DATA:?err}/homarr/data:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "container:gluetun"
+#    ports:
+#      - "${WEBUI_PORT_HOMARR:?err}:7575"             # Configured in Gluetun VPN container
 
 ###########################################################################
 ###########################################################################
@@ -270,7 +335,6 @@ services:
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-
 # NOTE: Homepage MUST NOT connect to the Gluetun VPN container
     networks:
       - mediastack
@@ -569,6 +633,40 @@ services:
 ###########################################################################
 ###########################################################################
 ##
+##  Docker Compose File: Open SMTP (https://github.com/wodby/opensmtpd)
+##  Function: SMTP Relay
+##
+##  Documentation: https://wodby.com/docs/1.0/stacks/opensmtpd/
+##
+###########################################################################
+###########################################################################
+services:
+  smtp:
+    image: wodby/opensmtpd:latest
+    container_name: smtp
+    restart: unless-stopped
+    ports:
+      - ${SMTP_PORT:?err}:25
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - OPENSMTPD_BOUNCE_WARN=1h
+      - OPENSMTPD_EXPIRE=7d
+      - OPENSMTPD_MAX_MESSAGE_SIZE=50M
+      - RELAY_HOST=${DOMAINNAME:?err}
+      - RELAY_PROTO=smtp+tls
+      - RELAY_USER=${SMTP_USERNAME}
+      - RELAY_PASSWORD=${SMTP_PASSWORD}
+      - RELAY_PORT=${SMTP_PORT:?err}
+# NOTE: SMTP Relay MUST NOT connect to the Gluetun VPN container
+    networks:
+      - mediastack
+
+###########################################################################
+###########################################################################
+##
 ##  Docker Compose File: Sonarr (LinuxServer.io)
 ##  Function: Series Library Manager (TV Shows)
 ##
@@ -620,7 +718,7 @@ services:
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-      - URL=${URL:?err}
+      - URL=${DOMAINNAME:?err}
       - SUBDOMAINS=${SUBDOMAINS}
       - VALIDATION=${VALIDATION:?err}
       - CERTPROVIDER=${CERTPROVIDER}

@@ -1,0 +1,32 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Homarr (https://ghcr.io/)
+##  Function: Application Dashboard
+##
+##  Documentation: https://homarr.dev/docs/getting-started/after-the-installation
+##
+###########################################################################
+###########################################################################
+services:
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/config
+      - ${FOLDER_FOR_DATA:?err}/homarr/icons:/app/public/icons
+      - ${FOLDER_FOR_DATA:?err}/homarr/data:/data
+    environment:
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_HOMARR:?err}:7575"             # Configured in Gluetun VPN container

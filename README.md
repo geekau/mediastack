@@ -2,7 +2,7 @@
 
 Welcome to the MediaStack project! MediaStack is your ultimate solution for managing and streaming media collections with applications like Jellyfin and Plex. Using Docker, MediaStack containerises these media servers alongside *ARR applications (Radarr, Sonarr, Lidarr, etc.) for seamless media automation and management.  
 
-You will be able to connect to the Docker MediaStack from the Internet using SWAG, which handles reverse proxy and web server tasks, ensuring secure and efficient traffic management. Authelia provides robust authentication to protect your remote access, and Heimdall serves as a convenient portal for accessing all your Docker applications in one place. Additionally, MediaStack leverages Cloudflare's Zero Trust and proxy services, ensuring that remote access to your media is both secure and reliable. This setup provides two-factor authentication (2FA) and single sign-on (SSO) capabilities, ensuring that users must verify their identities before gaining access, so you know you can remotely share your Docker applications, with the confidence that your collections are protected.  
+You will be able to connect to the Docker MediaStack from the Internet using SWAG, which handles reverse proxy and web server tasks, ensuring secure and efficient traffic management. Authelia provides robust authentication to protect your remote access, and Heimdall serves as a convenient portal for accessing all your Docker applications in one place. Additionally, MediaStack leverages Cloudflare DNS and reverse proxy services, ensuring that remote access to your media is both secure and reliable. This setup provides two-factor authentication (2FA) using DUO Security Push Notifications (Cisco Systems), ensuring that users must verify their identities before gaining access, so you know you can remotely share your Docker applications, with the confidence that your collections are protected.  
 
 MediaStack combines security, flexibility, and ease of use, making it the perfect choice for users who want comprehensive control over their media libraries. Whether you're streaming the latest movie, automating TV show downloads, or organising your music collection, MediaStack has you covered. Join the MediaStack community and elevate your media management experience.  
 
@@ -216,13 +216,13 @@ graph TD
 
 ## Secure Remote Network Access  
 
-All of the Docker configurations are set up to allow you to remotely access your Docker applications while you're away from home. The network diagram illustrates a secure remote access architecture utilising a combination of Docker applications, SWAG (Secure Web Application Gateway), Authelia, Heimdal, and Cloudflare Zero Trust. This setup ensures that only authenticated and trusted users that you grant permissions to, can access the internal Docker-based services over the Internet.
+All of the Docker configurations are set up to allow you to remotely access your Docker applications while you're away from home. The network diagram illustrates a secure remote access architecture utilising a combination of Docker applications, SWAG (Secure Web Application Gateway), Authelia, Cloudflare DNS, and 2FA Push Notifications from DUO Security (Cisco Systems). This setup ensures that only authenticated and trusted users that you grant permissions to, can access the internal Docker-based services from the Internet.
 
 At the core of the network is the Docker infrastructure, operating on the subnet 172.28.10.0/24 (adjustable). Within this network, multiple applications are hosted in Docker containers. Once a remote user is successfully authenticated, they are granted access to Heimdall, which serves as a landing page portal provding users with easy access to the other Docker applications. To securely manage and route incoming connections, SWAG functions as both a reverse proxy and web server, and uses a valid SSL Digital Certificate to encrypt the remote HTTPS session. It intercepts requests from remote users and forwards them to the appropriate internal services.
 
-Cloudflare plays a crucial role in enhancing security. It acts as the initial point of contact for remote Internet users, offering a robust proxy service that filters and manages traffic before it reaches SWAG. Cloudflare Zero Trust provides an additional layer of security by enforcing authentication and access policies. This means that any request must pass through Cloudflare's security checks, ensuring only authorised traffic reaches the internal Docker network.
+Cloudflare plays a crucial role in enhancing security. It acts as the initial point of contact for remote Internet users, offering a robust reverse proxy service that filters and manages traffic before it reaches SWAG. 2FA Push Notification from DUO Security (Cisco Systems) provides an additional layer of security by enforcing an additionaly layer of authentication and access policies.
 
-Authelia, integrated with both SWAG and Cloudflare Zero Trust, handles user authentication. It provides two-factor authentication (2FA) and single sign-on (SSO) capabilities, ensuring that users must verify their identities before gaining access. This integration ensures that even if an attacker bypasses the Cloudflare security checks, they still face robust authentication challenges from Authelia.
+Authelia integrated with SWAG handles user authentication and authorisation, including 2FA Push Notifications with DUO Security (Cisco Systems), ensuring users must use more than just a password to protect their accounts and access to the MediaStand applications.
 
 By combining these technologies, the setup ensures a secure, scalable, and manageable remote access solution. The network protects against unauthorized access while providing legitimate users with seamless access to the necessary applications, thus balancing security with user convenience.
 
@@ -231,7 +231,14 @@ By combining these technologies, the setup ensures a secure, scalable, and manag
 
 ``` mermaid  
 graph
-    subgraph DockerNet[<center>Docker Networking - 172.28.10.0/24</center>]
+
+    subgraph Internet[<center>Internet Zone</center>]
+        Remote[ Remote</br>Internet Users ]
+        Proxy{<center>Cloudflare</br>Proxy</center>}
+        DUO{<center>DUO Security</br>2FA</center>}
+    end
+
+    subgraph DockerNet[<center>Docker Networking</br>172.28.10.0/24</center>]
         Authelia
         SMTP[SMTP</br>Relay]
         SWAG
@@ -240,19 +247,15 @@ graph
         Docker{Docker</br>Applications}
         Apps{Internal Network</br>Access}
     end
-    subgraph Internet[<center>Internet Zone</center>]
-        Remote[ Remote</br>Internet Users ]
-        Tunnel{<center>Cloudflare</br>Tunnel</center>}
-        DUO{<center>DUO Security</br>2FA</center>}
-    end
+
     Gateway[Home Gateway]
     Remote <-.->   | Push</br>Notifications             | DUO
     Authelia -.->  | Password</br>Resets                | SMTP
     Homepage ==>   | Remote</br>Access                  | Docker
     Homepage ==>   | Remote</br>Access                  | Apps
     Gateway -.->   | Password</br>Resets                | Remote
-    Tunnel ==>     | Remote Access</br>HTTPS to SWAG    | Gateway
-    Remote ==>     | Remote Access</br>HTTPS to SWAG    | Tunnel
+    Proxy ==>      | Remote Access</br>HTTPS to SWAG    | Gateway
+    Remote ==>     | Remote Access</br>HTTPS to SWAG    | Proxy
     Gateway ==>    | Remote</br>Access                  | NIC
     NIC ==>        | Remote</br>Access                  | SWAG
     Authelia <-.-> | Auth                               | NIC
@@ -270,7 +273,7 @@ graph
     style Remote stroke:green   ,stroke-width:2px
     style Gateway stroke:green  ,stroke-width:2px
     style DUO stroke:green      ,stroke-width:2px
-    style Tunnel stroke:green   ,stroke-width:2px
+    style Proxy stroke:green   ,stroke-width:2px
     style Apps stroke:green     ,stroke-width:2px
     style Docker stroke:green   ,stroke-width:2px
     style NIC stroke:green      ,stroke-width:2px
@@ -284,8 +287,6 @@ graph
     linkStyle 12 stroke:#FFA500 ,stroke-width:2px
     linkStyle 14 stroke:#0088FF ,stroke-width:2px
     linkStyle 15 stroke:#0088FF ,stroke-width:2px
-
-
 ```  
 
 </center>
@@ -293,7 +294,7 @@ graph
 
 ## What If I Don't Want Remote Access  
 
-All of the MediaStack Docker configurations deploy the Docker applications necessary to set up remote access into your home network, however, the remote access will only work if you configure the Docker environment with a valid domain name (DNS or DDNS), your Home Gateway is configured to port-forward network traffic into your home network, and you set up authentication with Authelia and Cloudflare Zero Trust.  
+All of the MediaStack Docker configurations deploy the Docker applications necessary to set up remote access into your home network, however, the remote access will only work if you configure the Docker environment with a valid domain name (DNS or DDNS), your Home Gateway is configured to port-forward network traffic into your home network, and you set up authentication with Authelia and DUO Security.  
 
 So, while all Docker configurations deploy the Remote Access applications, the Remote Access will not work unless you follow the additional instructions to set up the authentication and access requirements. Therefore, if you don't want remote access, you can still safely install all of the Docker YAML configurations currently how they are now, without automatically granting Remote Access to your home network.  
 
@@ -400,10 +401,9 @@ All of the filesystems are automatically mapped between your host computers hard
 
 You will need to set up the following variables in the **`docker-compose.env`** environment configuration file, do Docker know this folders on the Docker host computer to use for the local data storage.
 
-```
-vi docker-compose.env
-FOLDER_FOR_MEDIA=/mediastack
-FOLDER_FOR_DATA=/mediastackdata
+``` bash
+FOLDER_FOR_MEDIA=/your-media-folder       # Change to where you want your media to be stored
+FOLDER_FOR_DATA=/your-app-configs         # Change to where you want your container configurations to be stored
 ```
 
 The **`FOLDER_FOR_MEDIA`** variable can be either Linux, Windows, MacOS, Synology, or NFS filesystems, and is the location for all of the **media storage, and transient download files** being used by the Bittorrent and Usenet applications. The filesystem mapping and directory structure between the Docker host computer, and the Docker applications, is shown in the folder structure below.  
@@ -411,49 +411,54 @@ The **`FOLDER_FOR_MEDIA`** variable can be either Linux, Windows, MacOS, Synolog
 The **`FOLDER_FOR_DATA`** variable can also be either Linux, Windows, MacOS, Synology, or NFS filesystems, and is the **configuration storage** for all of the Docker applications. Docker will store the running configuration of each of the Docker applications, into their own directory, inside the **`FOLDER_FOR_DATA`** directory.  
 
 ``` { .text .no-copy }
-    $ tree $FOLDER_FOR_MEDIA
-
-    ⠀⠀⠀⠀⠀Docker Host Computer:⠀⠀⠀⠀⠀⠀⠀⠀⠀Inside Docker Containers:
-    ├── /FOLDER_FOR_MEDIA   ⠀       ├── /data
-    ⠀⠀⠀⠀⠀├── media                  ⠀⠀⠀⠀├── media        <-- Media is stored / managed under this folder
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Sonarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Lidarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Readarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar3 Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Radarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Lidarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── photos                │⠀⠀⠀⠀├── photos      <-- N/A - Add Personal Photos
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- Sonarr Media Library Manager
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Whisparr Media Library Manager
-    ⠀⠀⠀⠀⠀├── torrents               ⠀⠀⠀⠀├── torrents     <-- Folder for Torrent Downloads Data
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)
-    ⠀⠀⠀⠀⠀├── usenet                 ⠀⠀⠀⠀├── usenet       <-- Folder for Usenet Downloads Data
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)
-    ⠀⠀⠀⠀⠀└── watch                  ⠀⠀⠀⠀└── watch       <-- Add .nzb and .torrent files for manual download
+    $ tree $FOLDER_FOR_MEDIA  
+  
+    ⠀⠀⠀⠀⠀Docker Host Computer:⠀⠀⠀⠀⠀⠀⠀⠀⠀Inside Docker Containers:  
+    ├── /FOLDER_FOR_MEDIA   ⠀       ├── /data  
+    ⠀⠀⠀⠀⠀├── media                  ⠀⠀⠀⠀├── media        <-- Media is stored / managed under this folder  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Sonarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Lidarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Readarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar3 Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Radarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Lidarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── photos                │⠀⠀⠀⠀├── photos      <-- N/A - Add Personal Photos  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- Sonarr Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Whisparr Media Library Manager  
+    ⠀⠀⠀⠀⠀├── torrents               ⠀⠀⠀⠀├── torrents     <-- Folder for Torrent Downloads Data  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)  
+    ⠀⠀⠀⠀⠀├── usenet                 ⠀⠀⠀⠀├── usenet       <-- Folder for Usenet Downloads Data  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)  
+    ⠀⠀⠀⠀⠀├── watch                  ⠀⠀⠀⠀└── watch       <-- Add .nzb and .torrent files for manual download  
+    ⠀⠀⠀⠀⠀│  
+    ⠀⠀⠀⠀⠀│    ⠀⠀⠀⠀⠀    ⠀⠀⠀⠀⠀    ⠀⠀⠀ ⠀⠀      Below Folders Only Mapped To Filebot Container  
+    ⠀⠀⠀⠀⠀└── filebot               ├── /filebot  
+    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀├── input                 ├── input      <-- Add Files Here for Renaming by Filebot  
+    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀└── output                └── output     <-- Files Moved Here After Renaming by Filebot  
 ```
 
 </br>
@@ -464,25 +469,43 @@ Update the following variables for your own needs: **`FOLDER_FOR_MEDIA`**, **`FO
 
 If using Linux, use the `sudo id username` to get the **`PUID`** and **`PGID`** values for your Docker user.
 
-```
-export FOLDER_FOR_MEDIA=/mediastack  
-export FOLDER_FOR_DATA=/mediastackdata  
+**Linux Based Command Line:**
+``` bash
+export FOLDER_FOR_MEDIA=/your-media-folder       # Change to where you want your media to be stored
+export FOLDER_FOR_DATA=/your-app-configs         # Change to where you want your container configurations to be stored
 
-export PUID=1000  
+export PUID=1000
 export PGID=1000  
 
-sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia/assets,bazarr,ddns-updater,gluetun,heimdall,homepage,jellyfin,jellyseerr,lidarr,mylar3,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
+sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia,bazarr,ddns-updater,gluetun,heimdall,homarr/{configs,data,icons},homepage,jellyfin,jellyseerr,lidarr,mylar3,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audio,books,comics,movies,music,photos,tv,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/watch  
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/filebot/{input,output}  
 sudo -E chmod -R 775 $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
 sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
 ```
 
+
+
+**Windows Based Command Prompt:**
+``` cmd
+set FOLDER_FOR_MEDIA=D:\Your-Media-Folder        # Change to where you want your media to be stored
+set FOLDER_FOR_DATA=D:\Your-App-Configs          # Change to where you want your container configurations to be stored
+
+FOR /D %I IN (authelia bazarr ddns-updater gluetun heimdall homarr\configs homarr\data homarr\icons homepage jellyfin jellyseerr lidarr mylar3 smtp plex portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr\server tdarr\configs tdarr\logs tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_DATA%\%I
+FOR /D %I IN (anime audio books comics movies music photos tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\media\%I
+FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\usenet\%I
+FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\torrents\%I
+mkdir %FOLDER_FOR_MEDIA%\watch
+mkdir %FOLDER_FOR_MEDIA%\filebot\input %FOLDER_FOR_MEDIA%\filebot\output
+```
 </br>
 
-> You can deploy the MediaStack Docker on other operating systems, such as Windows / Synology. Visit the [MediaStack.Guide](https://MediaStack.Guide) website to get the scripts to create the directory structure on Windows, MacOS, and Synology operating systems.
+> You can deploy the MediaStack Docker on other operating systems, such as Windows / Synology. Visit the [MediaStack.Guide](https://MediaStack.Guide) website to get the scripts to create the directory structure on Windows, MacOS, and Synology operating systems.  
+>  
+> PUID and PGID are not needed on Windows systems.  
 
 </br>
 
@@ -515,44 +538,80 @@ New users benefit from using multiple YAML files, each dedicated to an individua
 
 > NOTE: You must update the **`docker-compose.env`** file for your needs, prior to running **`docker compose`**.  
 
-Example:  
+</br>  
 
-```
-vi docker-compose.env
-sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-smtp.yaml         --env-file docker-compose.env up -d
+### Edit Environment Variables:  
 
-sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d
+Edit the .ENV file to update all of the variables to suit your home environment.  
 
-sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d
-
-sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d
-
-sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d
-
-sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d
-
-sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d
-
-sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d
-sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d
+``` bash  
+vi docker-compose.env  
 ```
 
-Additionally, if there are some Docker applications you do not want to run in your MediaStack, then you just don't run the **`docker compose`** command for these applications.
+</br>  
+
+### Pull All Docker Images:  
+
+You can use the following script to pull down all of the Docker images from all of the Docker Compose YAML files.  
+
+This step is optional as images are pulled down during the deployment during the next step, however it will allow you to separate the steps if you want a little more control on stages.  
+
+``` bash  
+# Loop through all .yaml files in the current directory  
+for file in *.yaml; do  
+  echo "Pulling images from $file..."  
+  sudo docker compose --file "$file" --env-file docker-compose.env pull  
+done  
+```
+
+> NOTE: Some older versions of Docker Compose may need to be deployed using command `docker-compose`, instead of the new `docker compose` command.  
+>  
+> Update the script above /below, if you need to use `docker-compose`.  
+
+</br>  
+
+### Deploy All Docker Containers:  
+
+Use the following commands to deploy the Docker images.  
+
+``` bash  
+sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d  
+  
+sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d  
+  
+sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d  
+  
+sudo docker compose --file docker-compose-homarr.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d  
+  
+sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d  
+  
+sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-filebot.yaml      --env-file docker-compose.env up -d  
+ 
+sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-smtp.yaml         --env-file docker-compose.env up -d  
+```
+
+</br>  
+
+> If there are Docker applications you do not want to run in your MediaStack, then you just don't need to run the **`docker compose`** command for these applications.
 
 </br>
 

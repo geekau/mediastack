@@ -1,0 +1,34 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Filebot (GitHub)
+##  Function: Lookup and Rename Media from Internet Databases
+##
+##  Docker Page:   https://github.com/filebot/filebot-docker#filebot-xpra
+##  Homepage:      https://www.filebot.net/
+##  User Forum:    https://www.filebot.net/forums
+##
+###########################################################################
+###########################################################################
+services:
+  filebot:
+    image: rednoah/filebot:xpra
+    container_name: filebot
+    restart: unless-stopped
+    volumes:
+      - ${FOLDER_FOR_DATA:?err}/filebot:/data/filebot
+      - ${FOLDER_FOR_MEDIA:?err}/filebot:/filebot
+    environment:
+#      - XPRA_AUTH=password:value=YOUR_PASSWORD
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - DARK_MODE=1
+    network_mode: "container:gluetun"
+
+# Ports are disabled in containers when they are connected to VPN, as the
+# Gluetun container manages the ports for containers that connect via VPN
+
+#    ports:
+#      - "${WEBUI_PORT_FILEBOT:?err}:5454"             # Configured in Gluetun VPN container

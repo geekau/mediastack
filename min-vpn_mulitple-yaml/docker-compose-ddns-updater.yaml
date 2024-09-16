@@ -34,7 +34,7 @@ services:
       - HTTP_TIMEOUT=10s
 
       # Web UI
-      - LISTENING_PORT=${WEBUI_PORT_DDNS_UPDATER:?err}
+      - LISTENING_ADDRESS=:${WEBUI_PORT_DDNS_UPDATER:?err}
       - ROOT_URL=/
 
       # Backup
@@ -47,7 +47,6 @@ services:
       - SHOUTRRR_ADDRESSES=
 
 # NOTE: DDNS-Update MUST NOT connect to the Gluetun VPN container
-
 networks:
   default:
     name: mediastack

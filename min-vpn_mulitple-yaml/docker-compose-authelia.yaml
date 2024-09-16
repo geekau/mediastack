@@ -24,7 +24,6 @@ services:
     restart: unless-stopped
 
 # NOTE: Authelia MUST NOT connect to the Gluetun VPN container
-
 networks:
   default:
     name: mediastack

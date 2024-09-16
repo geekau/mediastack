@@ -1,0 +1,34 @@
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Filebot (GitHub)
+##  Function: Lookup and Rename Media from Internet Databases
+##
+##  Docker Page:   https://github.com/filebot/filebot-docker#filebot-xpra
+##  Homepage:      https://www.filebot.net/
+##  User Forum:    https://www.filebot.net/forums
+##
+###########################################################################
+###########################################################################
+services:
+  filebot:
+    image: rednoah/filebot:xpra
+    container_name: filebot
+    restart: unless-stopped
+    ports:
+      - "${WEBUI_PORT_FILEBOT:?err}:5454"
+    volumes:
+      - ${FOLDER_FOR_DATA:?err}/filebot:/data/filebot
+      - ${FOLDER_FOR_MEDIA:?err}/filebot:/filebot
+    environment:
+#      - XPRA_AUTH=password:value=YOUR_PASSWORD
+      - PUID=${PUID:?err}
+      - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
+      - TZ=${TIMEZONE:?err}
+      - DARK_MODE=1
+
+networks:
+  default:
+    name: mediastack
+    external: true

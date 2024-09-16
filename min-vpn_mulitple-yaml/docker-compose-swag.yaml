@@ -26,7 +26,7 @@ services:
       - PGID=${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
-      - URL=${URL:?err}
+      - URL=${DOMAINNAME:?err}
       - SUBDOMAINS=${SUBDOMAINS}
       - VALIDATION=${VALIDATION:?err}
       - CERTPROVIDER=${CERTPROVIDER}

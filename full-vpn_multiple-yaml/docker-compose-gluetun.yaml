@@ -31,10 +31,12 @@ services:
       - "8888:8888/tcp"                         # Gluetun Local Network HTTP proxy
       - "8388:8388/tcp"                         # Gluetun Local Network Shadowsocks
       - "8388:8388/udp"                         # Gluetun Local Network Shadowsocks
+      - ${GLUETUN_CONTROL_PORT:?err}:${GLUETUN_CONTROL_PORT:?err} # Gluetun Status Port
 
 # Comment out lines below if they are not going to use Gluetun VPN for Internet connection:
 
       - "${WEBUI_PORT_BAZARR:?err}:6767"        # WebUI Portal: Bazarr
+      - "${WEBUI_PORT_HOMARR:?err}:7575"        # WebUI Portal: Homarr
       - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
       - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
       - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
@@ -45,6 +47,8 @@ services:
       - "${WEBUI_PORT_SABNZBD:?err}:8080"       # WebUI Portal: SABnzbd
       - "${WEBUI_PORT_SONARR:?err}:8989"        # WebUI Portal: Sonarr
       - "${WEBUI_PORT_WHISPARR:?err}:6969"      # WebUI Portal: Whisparr
+
+      - "${WEBUI_PORT_FILEBOT:?err}:${WEBUI_PORT_FILEBOT:?err}"           # WebUI Portal: Filebot
       - "${WEBUI_PORT_QBITTORRENT:?err}:${WEBUI_PORT_QBITTORRENT:?err}"   # WebUI Portal: qBittorrent
 
       - "${QBIT_PORT:?err}:6881"                # Transmission Torrent Port
@@ -54,8 +58,8 @@ services:
       - "${WEBUI_PORT_TDARR:?err}:${WEBUI_PORT_TDARR:?err}"     # Tdarr: WebUI Portal
 
       - "${WEBUI_PORT_PLEX:?err}:32400"         # WebUI Portal: Plex
-#      - 1900:1900/udp                           # DNLA Service
-#      - 5353:5353/udp                           # Plex Network Port
+#      - 1900:1900/udp                           # DNLA Service       (Clashes with Synology: SSPD "File Services" --> "Advanced")
+#      - 5353:5353/udp                           # Plex Network Port  (Clashes with Synology: Bonjour "File Services" --> "Advanced")
       - 8324:8324                               # Plex Network Port
       - 32410:32410/udp                         # Plex Network Port
       - 32412:32412/udp                         # Plex Network Port
@@ -68,6 +72,7 @@ services:
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}
+      - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:?err}
       - OPENVPN_USER=${VPN_USERNAME:?err}
@@ -79,6 +84,7 @@ services:
       - SERVER_CATEGORIES=${SERVER_CATEGORIES}
       - FIREWALL_OUTBOUND_SUBNETS=${LOCAL_SUBNET:?err}
       - OPENVPN_CUSTOM_CONFIG=${OPENVPN_CUSTOM_CONFIG}
+      - HTTP_CONTROL_SERVER_ADDRESS=:${GLUETUN_CONTROL_PORT:?err}
       - VPN_TYPE=${VPN_TYPE}
       - VPN_ENDPOINT_IP=${VPN_ENDPOINT_IP}
       - VPN_ENDPOINT_PORT=${VPN_ENDPOINT_PORT}
