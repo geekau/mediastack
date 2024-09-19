@@ -16,7 +16,7 @@ networks:
 ##  Docker Compose File: Gluetun (qmcgaw)
 ##  Function: VPN Client
 ##
-##  Documentation: https://github.com/qdm12/gluetun/wiki
+##  Documentation: https://github.com/qdm12/gluetun-wiki
 ##
 ###########################################################################
 ###########################################################################
@@ -183,7 +183,6 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-services:
   filebot:
     image: rednoah/filebot:xpra
     container_name: filebot
@@ -265,7 +264,6 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-services:
   homarr:
     image: ghcr.io/ajnart/homarr:latest
     container_name: homarr
@@ -622,7 +620,6 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-services:
   smtp:
     image: wodby/opensmtpd:latest
     container_name: smtp
