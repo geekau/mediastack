@@ -13,13 +13,14 @@ services:
     image: qmcgaw/ddns-updater:latest
     container_name: ddns-updater
     restart: always
+    user: ${PUID:?err}:${PGID:?err}
     volumes:
       - ${FOLDER_FOR_DATA:?err}/ddns-updater:/updater/data
     ports:
       - ${WEBUI_PORT_DDNS_UPDATER:?err}:${WEBUI_PORT_DDNS_UPDATER:?err}/tcp
     environment:
-      - PUID=${PUID:?err}
-      - PGID=${PGID:?err}
+#      - PUID=${PUID:?err}    # Not used in DDNS-Updater - see above:   user: ${PUID:?err}:${PGID:?err}
+#      - PGID=${PGID:?err}    # Not used in DDNS-Updater - see above:   user: ${PUID:?err}:${PGID:?err}
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - CONFIG=
