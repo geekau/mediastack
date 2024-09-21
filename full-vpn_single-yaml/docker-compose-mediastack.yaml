@@ -42,7 +42,7 @@ services:
       - "${WEBUI_PORT_JELLYFIN:?err}:8096"      # WebUI Portal: Jellyfin
       - "${WEBUI_PORT_JELLYSEERR:?err}:5055"    # WebUI Portal: Jellyseerr
       - "${WEBUI_PORT_LIDARR:?err}:8686"        # WebUI Portal: Lidarr
-      - "${WEBUI_PORT_MYLAR3:?err}:8090"        # WebUI Portal: Mylar3
+      - "${WEBUI_PORT_MYLAR:?err}:8090"         # WebUI Portal: Mylar3
       - "${WEBUI_PORT_PROWLARR:?err}:9696"      # WebUI Portal: Prowlarr
       - "${WEBUI_PORT_RADARR:?err}:7878"        # WebUI Portal: Radarr
       - "${WEBUI_PORT_READARR:?err}:8787"       # WebUI Portal: Readarr
@@ -434,12 +434,12 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-  mylar3:
+  mylar:
     image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
+    container_name: mylar
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DATA:?err}/mylar3:/config
+      - ${FOLDER_FOR_DATA:?err}/mylar:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     environment:
       - PUID=${PUID:?err}
@@ -449,7 +449,7 @@ services:
       - TP_THEME=${TP_THEME:?err}
     network_mode: "service:gluetun"
 #    ports:
-#      - "${WEBUI_PORT_MYLAR3:?err}:8090"             # Configured in Gluetun VPN container
+#      - "${WEBUI_PORT_MYLAR:?err}:8090"             # Configured in Gluetun VPN container
 
 ###########################################################################
 ###########################################################################

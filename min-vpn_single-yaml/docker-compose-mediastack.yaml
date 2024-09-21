@@ -412,15 +412,15 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-  mylar3:
+  mylar:
     image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
+    container_name: mylar
     restart: unless-stopped
     volumes:
-      - ${FOLDER_FOR_DATA:?err}/mylar3:/config
+      - ${FOLDER_FOR_DATA:?err}/mylar:/config
       - ${FOLDER_FOR_MEDIA:?err}:/data
     ports:
-      - "${WEBUI_PORT_MYLAR3:?err}:8090"
+      - "${WEBUI_PORT_MYLAR:?err}:8090"
     environment:
       - PUID=${PUID:?err}
       - PGID=${PGID:?err}

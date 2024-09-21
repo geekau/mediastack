@@ -40,7 +40,7 @@ graph TD
         Radarr -..-> NIC
         Readarr -.-> NIC
         Sonarr -..-> NIC
-        Mylar3 -.-> NIC
+        Mylar -.-> NIC
         Whisparr -..-> NIC
         Bazarr -.-> NIC
         Lidarr -..-> NIC
@@ -57,7 +57,7 @@ graph TD
     
     style Bazarr stroke:orange,stroke-width:2px
     style Lidarr stroke:orange,stroke-width:2px
-    style Mylar3 stroke:orange,stroke-width:2px
+    style Mylar stroke:orange,stroke-width:2px
     style Prowlarr stroke:orange,stroke-width:2px
     style Radarr stroke:orange,stroke-width:2px
     style Readarr stroke:orange,stroke-width:2px

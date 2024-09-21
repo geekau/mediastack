@@ -39,7 +39,7 @@ graph TD
         Radarr ---- Gluetun
         Readarr --- Gluetun
         Sonarr ---- Gluetun
-        Mylar3 --- Gluetun
+        Mylar --- Gluetun
         Whisparr ---- Gluetun
         Bazarr --- Gluetun
         Lidarr ---- Gluetun
@@ -54,7 +54,7 @@ graph TD
     
     style Bazarr stroke:green,stroke-width:2px
     style Lidarr stroke:green,stroke-width:2px
-    style Mylar3 stroke:green,stroke-width:2px
+    style Mylar stroke:green,stroke-width:2px
     style Prowlarr stroke:green,stroke-width:2px
     style Radarr stroke:green,stroke-width:2px
     style Readarr stroke:green,stroke-width:2px

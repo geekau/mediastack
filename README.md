@@ -117,7 +117,7 @@ graph TD
         Radarr ---- Gluetun
         Readarr --- Gluetun
         Sonarr ---- Gluetun
-        Mylar3 --- Gluetun
+        Mylar --- Gluetun
         Whisparr ---- Gluetun
         Bazarr --- Gluetun
         Lidarr ---- Gluetun
@@ -132,7 +132,7 @@ graph TD
     
     style Bazarr      stroke:green,stroke-width:2px
     style Lidarr      stroke:green,stroke-width:2px
-    style Mylar3      stroke:green,stroke-width:2px
+    style Mylar      stroke:green,stroke-width:2px
     style Prowlarr    stroke:green,stroke-width:2px
     style Radarr      stroke:green,stroke-width:2px
     style Readarr     stroke:green,stroke-width:2px
@@ -175,7 +175,7 @@ graph TD
         Radarr -..-> NIC
         Readarr -.-> NIC
         Sonarr -..-> NIC
-        Mylar3 -.-> NIC
+        Mylar -.-> NIC
         Whisparr -..-> NIC
         Bazarr -.-> NIC
         Lidarr -..-> NIC
@@ -192,7 +192,7 @@ graph TD
     
     style Bazarr      stroke:orange,stroke-width:2px
     style Lidarr      stroke:orange,stroke-width:2px
-    style Mylar3      stroke:orange,stroke-width:2px
+    style Mylar      stroke:orange,stroke-width:2px
     style Prowlarr    stroke:orange,stroke-width:2px
     style Radarr      stroke:orange,stroke-width:2px
     style Readarr     stroke:orange,stroke-width:2px
@@ -419,7 +419,7 @@ The **`FOLDER_FOR_DATA`** variable can also be either Linux, Windows, MacOS, Syn
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Sonarr Media Library Manager  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Lidarr Media Library Manager  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Readarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar3 Media Library Manager  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar Media Library Manager  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Radarr Media Library Manager  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Lidarr Media Library Manager  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── photos                │⠀⠀⠀⠀├── photos      <-- N/A - Add Personal Photos  
@@ -429,7 +429,7 @@ The **`FOLDER_FOR_DATA`** variable can also be either Linux, Windows, MacOS, Syn
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
@@ -443,7 +443,7 @@ The **`FOLDER_FOR_DATA`** variable can also be either Linux, Windows, MacOS, Syn
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar3)  
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
     ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
@@ -477,7 +477,7 @@ export FOLDER_FOR_DATA=/your-app-configs         # Change to where you want your
 export PUID=1000
 export PGID=1000  
 
-sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia/{assets,secrets},bazarr,ddns-updater,gluetun,heimdall,homarr/{configs,data,icons},homepage,jellyfin,jellyseerr,lidarr,mylar3,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
+sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia/assets,bazarr,ddns-updater,gluetun,heimdall,homarr/{configs,data,icons},homepage,jellyfin,jellyseerr,lidarr,mylar,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audio,books,comics,movies,music,photos,tv,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
 sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
@@ -494,7 +494,7 @@ sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
 set FOLDER_FOR_MEDIA=D:\Your-Media-Folder        # Change to where you want your media to be stored
 set FOLDER_FOR_DATA=D:\Your-App-Configs          # Change to where you want your container configurations to be stored
 
-FOR /D %I IN (authelia\assets authelia\secrets bazarr ddns-updater gluetun heimdall homarr\configs homarr\data homarr\icons homepage jellyfin jellyseerr lidarr mylar3 smtp plex portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr\server tdarr\configs tdarr\logs tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_DATA%\%I
+FOR /D %I IN (authelia\assets bazarr ddns-updater gluetun heimdall homarr\configs homarr\data homarr\icons homepage jellyfin jellyseerr lidarr mylar smtp plex portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr\server tdarr\configs tdarr\logs tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_DATA%\%I
 FOR /D %I IN (anime audio books comics movies music photos tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\media\%I
 FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\usenet\%I
 FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\torrents\%I
@@ -581,7 +581,7 @@ sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-co
   
 sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-mylar.yaml        --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  

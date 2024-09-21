@@ -39,7 +39,7 @@ graph TD
         Radarr ---- Gluetun
         Readarr --- Gluetun
         Sonarr ---- Gluetun
-        Mylar3 --- Gluetun
+        Mylar --- Gluetun
         Whisparr ---- Gluetun
         Bazarr --- Gluetun
         Lidarr ---- Gluetun
@@ -54,7 +54,7 @@ graph TD
     
     style Bazarr stroke:green,stroke-width:2px
     style Lidarr stroke:green,stroke-width:2px
-    style Mylar3 stroke:green,stroke-width:2px
+    style Mylar stroke:green,stroke-width:2px
     style Prowlarr stroke:green,stroke-width:2px
     style Radarr stroke:green,stroke-width:2px
     style Readarr stroke:green,stroke-width:2px
@@ -99,7 +99,7 @@ sudo docker compose --file docker-compose-plex.yaml         --env-file docker-co
 
 sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-mylar.yaml        --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  

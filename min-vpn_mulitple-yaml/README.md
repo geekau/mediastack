@@ -31,7 +31,7 @@ graph TD
         Radarr -..-> NIC
         Readarr -.-> NIC
         Sonarr -..-> NIC
-        Mylar3 -.-> NIC
+        Mylar -.-> NIC
         Whisparr -..-> NIC
         Bazarr -.-> NIC
         Lidarr -..-> NIC
@@ -48,7 +48,7 @@ graph TD
     
     style Bazarr stroke:orange,stroke-width:2px
     style Lidarr stroke:orange,stroke-width:2px
-    style Mylar3 stroke:orange,stroke-width:2px
+    style Mylar stroke:orange,stroke-width:2px
     style Prowlarr stroke:orange,stroke-width:2px
     style Radarr stroke:orange,stroke-width:2px
     style Readarr stroke:orange,stroke-width:2px
@@ -92,7 +92,7 @@ sudo docker compose --file docker-compose-plex.yaml         --env-file docker-co
 
 sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-mylar3.yaml       --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-mylar.yaml        --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
 sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  
