@@ -273,7 +273,7 @@ services:
       - "${WEBUI_PORT_HOMARR:?err}:7575"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/config
+      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/configs
       - ${FOLDER_FOR_DATA:?err}/homarr/icons:/app/public/icons
       - ${FOLDER_FOR_DATA:?err}/homarr/data:/data
     environment:
@@ -608,39 +608,6 @@ services:
       - TZ=${TIMEZONE:?err}
       - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:sabnzbd
       - TP_THEME=${TP_THEME:?err}
-    networks:
-      - mediastack
-
-###########################################################################
-###########################################################################
-##
-##  Docker Compose File: Open SMTP (https://github.com/wodby/opensmtpd)
-##  Function: SMTP Relay
-##
-##  Documentation: https://wodby.com/docs/1.0/stacks/opensmtpd/
-##
-###########################################################################
-###########################################################################
-  smtp:
-    image: wodby/opensmtpd:latest
-    container_name: smtp
-    restart: unless-stopped
-    ports:
-      - ${SMTP_PORT:?err}:25
-    environment:
-      - PUID=${PUID:?err}
-      - PGID=${PGID:?err}
-      - UMASK=${UMASK:?err}
-      - TZ=${TIMEZONE:?err}
-      - OPENSMTPD_BOUNCE_WARN=1h
-      - OPENSMTPD_EXPIRE=7d
-      - OPENSMTPD_MAX_MESSAGE_SIZE=50M
-      - RELAY_HOST=${DOMAINNAME:?err}
-      - RELAY_PROTO=smtp+tls
-      - RELAY_USER=${SMTP_USERNAME}
-      - RELAY_PASSWORD=${SMTP_PASSWORD}
-      - RELAY_PORT=${SMTP_PORT:?err}
-# NOTE: SMTP Relay MUST NOT connect to the Gluetun VPN container
     networks:
       - mediastack
 

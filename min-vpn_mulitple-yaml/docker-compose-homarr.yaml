@@ -17,7 +17,7 @@ services:
       - "${WEBUI_PORT_HOMARR:?err}:7575"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/config
+      - ${FOLDER_FOR_DATA:?err}/homarr/configs:/app/data/configs
       - ${FOLDER_FOR_DATA:?err}/homarr/icons:/app/public/icons
       - ${FOLDER_FOR_DATA:?err}/homarr/data:/data
     environment:

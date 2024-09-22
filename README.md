@@ -78,7 +78,6 @@ List of Docker applications used in MediaStack:
 | [Radarr](https://radarr.video) | Radarr is a Library Manager, automating the management and meta data for your Movie media files |  
 | [Readarr](https://readarr.com) | is a Library Manager, automating the management and meta data for your eBooks and Comic media files |  
 | [SABnzbd](https://sabnzbd.org) | SABnzbd is a Usenet newsreader that automates the downloading of binary files from Usenet |  
-| [SMTP Relay](https://github.com/wodby/opensmtpd) | Integrated an SMTP Relay into the stack, for sending email notifications as needed |  
 | [Sonarr](https://sonarr.tv) | Sonarr is a Library Manager, automating the management and meta data for your TV Shows (series) media files |  
 | [SWAG](https://github.com/linuxserver/docker-swag) | SWAG (Secure Web Application Gateway) provides reverse proxy and web server functionalities with built-in security features |  
 | [Tdarr](https://tdarr.io) | Tdarr automates the transcoding and management of media files to optimise storage and playback compatibility |  
@@ -229,7 +228,7 @@ By combining these technologies, the setup ensures a secure, scalable, and manag
 </br>
 <center>
 
-``` mermaid  
+``` mermaid
 graph
 
     subgraph Internet[<center>Internet Zone</center>]
@@ -240,7 +239,7 @@ graph
 
     subgraph DockerNet[<center>Docker Networking</br>172.28.10.0/24</center>]
         Authelia
-        SMTP[SMTP</br>Relay]
+        SMTP[SMTP</br>Server]
         SWAG
         NIC[Docker Host</br>Network Bridge]
         Homepage
@@ -318,11 +317,11 @@ Quickest way to set up without VPN, would be to:
 These steps should get you running without VPN, we just need to run Gluetun first as it has the network stack in it, but the Gluetun container can be removed once the network is up:  
 
 ```
-sudo docker compose --file docker-compose-gluetun.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-qbittorrent.yaml --env-file docker-compose.env up -d  
-sudo docker network connect mediastack qbittorrent  
-sudo docker container stop gluetun  
-sudo docker container rm gluetun   
+sudo docker compose --file docker-compose-gluetun.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-qbittorrent.yaml --env-file docker-compose.env up -d
+sudo docker network connect mediastack qbittorrent
+sudo docker container stop gluetun
+sudo docker container rm gluetun
 
 ... load remaining docker containers ...
 ```
@@ -332,8 +331,8 @@ Now all of your containers will be running unencrypted network traffic out of Do
 You can check the IP Address on your qBittorrent container, to validate whether it is using your own ISP' IP address, or your VPN's IP address with the following commands - the commands are the same, not all containers have curl or wget available, so these should cover all options.  
 
 ```
-sudo docker exec -it gluetun /bin/sh -c "curl ifconfig.me"  
-sudo docker exec -it gluetun /bin/sh -c "wget -qO- ifconfig.me"  
+sudo docker exec -it gluetun /bin/sh -c "curl ifconfig.me"
+sudo docker exec -it gluetun /bin/sh -c "wget -qO- ifconfig.me"
 ```
 
 Then lookup the location of your IP Address with [https://iplocation.net](https://iplocation.net), this will tell you if you're succefully connected to your remote VPN anchor point.  
@@ -341,8 +340,8 @@ Then lookup the location of your IP Address with [https://iplocation.net](https:
 If you already have a successful remote access connection into your home network, then when you run the docker compose commands, you will not need to run the following commands; you won't need these Docker containers:  
 
 ```
-sudo docker compose --file docker-compose-swag.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-authelia.yaml --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-swag.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-authelia.yaml --env-file docker-compose.env up -d
 ```
 
 Hopefully this will get you to where you need your desired configuation. This info will eventually get into https://MediaStack.Guide and become part of the main documentation, so others can follow if they don't need VPN.  
@@ -411,54 +410,54 @@ The **`FOLDER_FOR_MEDIA`** variable can be either Linux, Windows, MacOS, Synolog
 The **`FOLDER_FOR_DATA`** variable can also be either Linux, Windows, MacOS, Synology, or NFS filesystems, and is the **configuration storage** for all of the Docker applications. Docker will store the running configuration of each of the Docker applications, into their own directory, inside the **`FOLDER_FOR_DATA`** directory.  
 
 ``` { .text .no-copy }
-    $ tree $FOLDER_FOR_MEDIA  
-  
-    ⠀⠀⠀⠀⠀Docker Host Computer:⠀⠀⠀⠀⠀⠀⠀⠀⠀Inside Docker Containers:  
-    ├── /FOLDER_FOR_MEDIA   ⠀       ├── /data  
-    ⠀⠀⠀⠀⠀├── media                  ⠀⠀⠀⠀├── media        <-- Media is stored / managed under this folder  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Sonarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Lidarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Readarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Radarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Lidarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── photos                │⠀⠀⠀⠀├── photos      <-- N/A - Add Personal Photos  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- Sonarr Media Library Manager  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Whisparr Media Library Manager  
-    ⠀⠀⠀⠀⠀├── torrents               ⠀⠀⠀⠀├── torrents     <-- Folder for Torrent Downloads Data  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)  
-    ⠀⠀⠀⠀⠀├── usenet                 ⠀⠀⠀⠀├── usenet       <-- Folder for Usenet Downloads Data  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)  
-    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)  
-    ⠀⠀⠀⠀⠀├── watch                  ⠀⠀⠀⠀└── watch       <-- Add .nzb and .torrent files for manual download  
-    ⠀⠀⠀⠀⠀│  
-    ⠀⠀⠀⠀⠀│    ⠀⠀⠀⠀⠀    ⠀⠀⠀⠀⠀    ⠀⠀⠀ ⠀⠀      Below Folders Only Mapped To Filebot Container  
-    ⠀⠀⠀⠀⠀└── filebot               ├── /filebot  
-    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀├── input                 ├── input      <-- Add Files Here for Renaming by Filebot  
-    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀└── output                └── output     <-- Files Moved Here After Renaming by Filebot  
+    $ tree $FOLDER_FOR_MEDIA
+
+    ⠀⠀⠀⠀⠀Docker Host Computer:⠀⠀⠀⠀⠀⠀⠀⠀⠀Inside Docker Containers:
+    ├── /FOLDER_FOR_MEDIA   ⠀       ├── /data
+    ⠀⠀⠀⠀⠀├── media                  ⠀⠀⠀⠀├── media        <-- Media is stored / managed under this folder
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Sonarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Lidarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Readarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Mylar Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Radarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Lidarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── photos                │⠀⠀⠀⠀├── photos      <-- N/A - Add Personal Photos
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- Sonarr Media Library Manager
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Whisparr Media Library Manager
+    ⠀⠀⠀⠀⠀├── torrents               ⠀⠀⠀⠀├── torrents     <-- Folder for Torrent Downloads Data
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)
+    ⠀⠀⠀⠀⠀├── usenet                 ⠀⠀⠀⠀├── usenet       <-- Folder for Usenet Downloads Data
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── anime                 │⠀⠀⠀⠀├── anime       <-- Anime Category (Sonarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── audio                 │⠀⠀⠀⠀├── audio       <-- Audio Category (Lidarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── books                 │⠀⠀⠀⠀├── books       <-- Book Category (Readarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── comics                │⠀⠀⠀⠀├── comics      <-- Comic Category (Mylar)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── complete              │⠀⠀⠀⠀├── complete    <-- Completed / General Downloads
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── console               │⠀⠀⠀⠀├── console     <-- Comic Category (Manual DL)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── incomplete            │⠀⠀⠀⠀├── incomplete  <-- Incomplete / Working Downloads
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── movies                │⠀⠀⠀⠀├── movies      <-- Movie Category (Radarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── music                 │⠀⠀⠀⠀├── music       <-- Music Category (Lidarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── prowlarr              │⠀⠀⠀⠀├── prowlarr    <-- Uncategorised Downloads from Prowlarr
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── software              │⠀⠀⠀⠀├── software    <-- Software Category (Manual DL)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀├── tv                    │⠀⠀⠀⠀├── tv          <-- TV Series (Sonarr)
+    ⠀⠀⠀⠀⠀│⠀⠀⠀⠀└── xxx                   │⠀⠀⠀⠀└── xxx         <-- Adult / XXX Category (Whisparr)
+    ⠀⠀⠀⠀⠀├── watch                  ⠀⠀⠀⠀└── watch       <-- Add .nzb and .torrent files for manual download
+    ⠀⠀⠀⠀⠀│
+    ⠀⠀⠀⠀⠀│    ⠀⠀⠀⠀⠀    ⠀⠀⠀⠀⠀    ⠀⠀⠀ ⠀⠀      Below Folders Only Mapped To Filebot Container
+    ⠀⠀⠀⠀⠀└── filebot               ├── /filebot
+    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀├── input                 ├── input      <-- Add Files Here for Renaming by Filebot
+    ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀└── output                └── output     <-- Files Moved Here After Renaming by Filebot
 ```
 
 </br>
@@ -475,16 +474,16 @@ export FOLDER_FOR_MEDIA=/your-media-folder       # Change to where you want your
 export FOLDER_FOR_DATA=/your-app-configs         # Change to where you want your container configurations to be stored
 
 export PUID=1000
-export PGID=1000  
+export PGID=1000
 
-sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia/assets,bazarr,ddns-updater,gluetun,heimdall,homarr/{configs,data,icons},homepage,jellyfin,jellyseerr,lidarr,mylar,opensmtpd,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}  
-sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audio,books,comics,movies,music,photos,tv,xxx}  
-sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
-sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}  
-sudo -E mkdir -p $FOLDER_FOR_MEDIA/watch  
-sudo -E mkdir -p $FOLDER_FOR_MEDIA/filebot/{input,output}  
-sudo -E chmod -R 775 $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
-sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA  
+sudo -E mkdir -p $FOLDER_FOR_DATA/{authelia/assets,bazarr,ddns-updater,gluetun,heimdall,homarr/{configs,data,icons},homepage,jellyfin,jellyseerr,lidarr,mylar,plex,portainer,prowlarr,qbittorrent,radarr,readarr,sabnzbd,sonarr,swag,tdarr/{server,configs,logs},tdarr_transcode_cache,unpackerr,whisparr}
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audio,books,comics,movies,music,photos,tv,xxx}
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audio,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/watch
+sudo -E mkdir -p $FOLDER_FOR_MEDIA/filebot/{input,output}
+sudo -E chmod -R 775 $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
+sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
 ```
 
 
@@ -494,7 +493,7 @@ sudo -E chown -R $PUID:$PGID $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
 set FOLDER_FOR_MEDIA=D:\Your-Media-Folder        # Change to where you want your media to be stored
 set FOLDER_FOR_DATA=D:\Your-App-Configs          # Change to where you want your container configurations to be stored
 
-FOR /D %I IN (authelia\assets bazarr ddns-updater gluetun heimdall homarr\configs homarr\data homarr\icons homepage jellyfin jellyseerr lidarr mylar smtp plex portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr\server tdarr\configs tdarr\logs tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_DATA%\%I
+FOR /D %I IN (authelia\assets bazarr ddns-updater gluetun heimdall homarr\configs homarr\data homarr\icons homepage jellyfin jellyseerr lidarr mylar plex portainer prowlarr qbittorrent radarr readarr sabnzbd sonarr swag tdarr\server tdarr\configs tdarr\logs tdarr_transcode_cache unpackerr whisparr) DO mkdir %FOLDER_FOR_DATA%\%I
 FOR /D %I IN (anime audio books comics movies music photos tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\media\%I
 FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\usenet\%I
 FOR /D %I IN (anime audio books comics complete console incomplete movies music prowlarr software tv xxx) DO mkdir %FOLDER_FOR_MEDIA%\torrents\%I
@@ -523,7 +522,7 @@ Example:
 
 ```
 vi docker-compose.env
-sudo docker compose --file docker-compose-mediastack.yaml --env-file docker-compose.env up -d  
+sudo docker compose --file docker-compose-mediastack.yaml --env-file docker-compose.env up -d
 ```
 
 > NOTE: You must update the **`docker-compose.env`** file for your needs, prior to running **`docker compose`**.  
@@ -545,7 +544,7 @@ New users benefit from using multiple YAML files, each dedicated to an individua
 Edit the .ENV file to update all of the variables to suit your home environment.  
 
 ``` bash  
-vi docker-compose.env  
+vi docker-compose.env
 ```
 
 </br>  
@@ -557,11 +556,11 @@ You can use the following script to pull down all of the Docker images from all 
 This step is optional as images are pulled down during the deployment during the next step, however it will allow you to separate the steps if you want a little more control on stages.  
 
 ``` bash  
-# Loop through all .yaml files in the current directory  
-for file in *.yaml; do  
-  echo "Pulling images from $file..."  
-  sudo docker compose --file "$file" --env-file docker-compose.env pull  
-done  
+# Loop through all .yaml files in the current directory
+for file in *.yaml; do
+  echo "Pulling images from $file..."
+  sudo docker compose --file "$file" --env-file docker-compose.env pull
+done
 ```
 
 > NOTE: Some older versions of Docker Compose may need to be deployed using command `docker-compose`, instead of the new `docker compose` command.  
@@ -574,39 +573,38 @@ done
 
 Use the following commands to deploy the Docker images.  
 
-``` bash  
-sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d  
-  
-sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-mylar.yaml        --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d  
-  
-sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d  
-  
-sudo docker compose --file docker-compose-homarr.yaml       --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d  
-  
-sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d  
-  
-sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-filebot.yaml      --env-file docker-compose.env up -d  
- 
-sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d  
-sudo docker compose --file docker-compose-smtp.yaml         --env-file docker-compose.env up -d  
+``` bash
+sudo docker compose --file docker-compose-gluetun.yaml      --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-qbittorrent.yaml  --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-sabnzbd.yaml      --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-prowlarr.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-lidarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-mylar.yaml        --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-radarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-readarr.yaml      --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-sonarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-whisparr.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-bazarr.yaml       --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-jellyfin.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-jellyseerr.yaml   --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-plex.yaml         --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-homarr.yaml       --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-homepage.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-heimdall.yaml     --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-flaresolverr.yaml --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-unpackerr.yaml    --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-tdarr.yaml        --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-portainer.yaml    --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-filebot.yaml      --env-file docker-compose.env up -d
+
+sudo docker compose --file docker-compose-swag.yaml         --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-authelia.yaml     --env-file docker-compose.env up -d
+sudo docker compose --file docker-compose-ddns-updater.yaml --env-file docker-compose.env up -d
 ```
 
 </br>  
@@ -664,7 +662,7 @@ Debug the Docker deployment by running the ```docker compose``` command on the C
 Example:  
 
 ```
-sudo docker compose --file docker-compose-gluetun.yaml --env-file docker-compose.env up  
+sudo docker compose --file docker-compose-gluetun.yaml --env-file docker-compose.env up
 ```
 
 Press **CTRL + C** once you have read the Docker application logs, and need to exit back to the CLI.  
