@@ -25,7 +25,7 @@ services:
 ###########################################################################
 ###########################################################################
   postgresql:
-    image: docker.io/library/postgres:latest
+    image: docker.io/library/postgres:17
     container_name: postgresql
     restart: unless-stopped
     networks:
@@ -841,28 +841,30 @@ services:
 ##
 ###########################################################################
 ###########################################################################
-  huntarr:
-    image: huntarr/huntarr:latest
-    container_name: huntarr
-    volumes:
-      - ${FOLDER_FOR_DATA:?err}/huntarr:/config
-    environment:
-      - PUID=${PUID:?err}
-      - PGID=${PGID:?err}
-      - TZ=${TIMEZONE:?err}
-    networks:
-      - mediastack
-    labels:
-      - traefik.enable=true
-    # ROUTERS
-      - traefik.http.routers.huntarr.service=huntarr
-      - traefik.http.routers.huntarr.rule=Host(`huntarr.${CLOUDFLARE_DNS_ZONE:?err}`)
-      - traefik.http.routers.huntarr.entrypoints=secureweb
-      - traefik.http.routers.huntarr.middlewares=authentik-forwardauth@file,security-headers@file,traefik-bouncer@file
-    # SERVICES
-      - traefik.http.services.huntarr.loadbalancer.server.scheme=http
-      - traefik.http.services.huntarr.loadbalancer.server.port=9705
-    # MIDDLEWARES
+# Note : Due to major security issues, Huntarr is deprecated.
+  # huntarr:
+  #   image: huntarr/huntarr:latest
+  #   container_name: huntarr
+  #   volumes:
+  #     - ${FOLDER_FOR_DATA:?err}/huntarr:/config
+  #   environment:
+  #     - PUID=${PUID:?err}
+  #     - PGID=${PGID:?err}
+  #     - TZ=${TIMEZONE:?err}
+  #   networks:
+  #     - mediastack
+  #   labels:
+  #     - traefik.enable=true
+  #   # ROUTERS
+  #     - traefik.http.routers.huntarr.service=huntarr
+  #     - traefik.http.routers.huntarr.rule=Host(`huntarr.${CLOUDFLARE_DNS_ZONE:?err}`)
+  #     - traefik.http.routers.huntarr.entrypoints=secureweb
+  #     - traefik.http.routers.huntarr.middlewares=authentik-forwardauth@file,security-headers@file,traefik-bouncer@file
+  #   # SERVICES
+  #     - traefik.http.services.huntarr.loadbalancer.server.scheme=http
+  #     - traefik.http.services.huntarr.loadbalancer.server.port=9705
+  #   # MIDDLEWARES
+
 
 ###########################################################################
 ###########################################################################
@@ -904,41 +906,6 @@ services:
     # SERVICES
       - traefik.http.services.jellyfin.loadbalancer.server.scheme=http
       - traefik.http.services.jellyfin.loadbalancer.server.port=8096
-    # MIDDLEWARES
-
-###########################################################################
-###########################################################################
-##
-##  Docker Compose File: Jellyseerr (fallenbagel)
-##  Function: Media Request Manager
-##
-##  Documentation: https://hub.docker.com/r/fallenbagel/jellyseerr
-##
-###########################################################################
-###########################################################################
-  jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
-    restart: unless-stopped
-    networks:
-      - mediastack
-    volumes:
-      - ${FOLDER_FOR_DATA:?err}/jellyseerr:/app/config
-    environment:
-      - PUID=${PUID:?err}
-      - PGID=${PGID:?err}
-      - UMASK=${UMASK:?err}
-      - TZ=${TIMEZONE:?err}
-    labels:
-      - traefik.enable=true
-    # ROUTERS
-      - traefik.http.routers.jellyseerr.service=jellyseerr
-      - traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${CLOUDFLARE_DNS_ZONE:?err}`)
-      - traefik.http.routers.jellyseerr.entrypoints=secureweb
-      - traefik.http.routers.jellyseerr.middlewares=authentik-forwardauth@file,security-headers@file,traefik-bouncer@file
-    # SERVICES
-      - traefik.http.services.jellyseerr.loadbalancer.server.scheme=http
-      - traefik.http.services.jellyseerr.loadbalancer.server.port=5055
     # MIDDLEWARES
 
 ###########################################################################
@@ -1214,7 +1181,7 @@ services:
 ###########################################################################
 ###########################################################################
   readarr:
-    image: lscr.io/linuxserver/readarr:develop
+    image: lscr.io/linuxserver/readarr:0.4.18-develop    
     container_name: readarr
     restart: unless-stopped
     volumes:
@@ -1275,6 +1242,38 @@ services:
     # SERVICES
       - traefik.http.services.sabnzbd.loadbalancer.server.scheme=http
       - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
+    # MIDDLEWARES
+
+###########################################################################
+###########################################################################
+##
+##  Docker Compose File: Seerr (seerr-team)
+##  Function: Media Request Manager
+##
+##  Documentation: https://github.com/seerr-team/seerr
+##
+###########################################################################
+###########################################################################
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    restart: unless-stopped
+    networks:
+      - mediastack
+    volumes:
+      - ${FOLDER_FOR_DATA:?err}/seerr:/app/config
+    environment:
+      - TZ=${TIMEZONE:?err}
+    labels:
+      - traefik.enable=true
+    # ROUTERS
+      - traefik.http.routers.seerr.service=seerr
+      - traefik.http.routers.seerr.rule=Host(`seerr.${CLOUDFLARE_DNS_ZONE:?err}`)
+      - traefik.http.routers.seerr.entrypoints=secureweb
+      - traefik.http.routers.seerr.middlewares=authentik-forwardauth@file,security-headers@file,traefik-bouncer@file
+    # SERVICES
+      - traefik.http.services.seerr.loadbalancer.server.scheme=http
+      - traefik.http.services.seerr.loadbalancer.server.port=5055
     # MIDDLEWARES
 
 ###########################################################################
@@ -1548,7 +1547,7 @@ services:
 ###########################################################################
 ###########################################################################
   whisparr:
-    image: hotio/whisparr:nightly
+    image: ghcr.io/hotio/whisparr:nightly
     container_name: whisparr
     restart: unless-stopped
     volumes:
