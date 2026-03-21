@@ -336,16 +336,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    healthcheck:
-      test:
-        - CMD
-        - cscli
-        - lapi
-        - status
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
     networks:
       - mediastack
     user: ${PUID:?err}:${PGID:?err}
@@ -577,7 +567,6 @@ services:
       - ${WEBUI_PORT_RADARR:?err}:7878        # WebUI Portal: Radarr
       - ${WEBUI_PORT_LAZYLIBRARIAN:?err}:5299 # WebUI Portal: LazyLibrarian
       - ${WEBUI_PORT_SABNZBD:?err}:8080       # WebUI Portal: SABnzbd
-      - ${WEBUI_PORT_SEERR:?err}:5055         # WebUI Portal: Seerr
       - ${WEBUI_PORT_SONARR:?err}:8989        # WebUI Portal: Sonarr
       - ${WEBUI_PORT_WHISPARR:?err}:6969      # WebUI Portal: Whisparr
 
@@ -1449,43 +1438,6 @@ services:
 ###########################################################################
 ###########################################################################
 ##
-##  Docker Compose File: Seerr (seerr-team)
-##  Function: Media Request Manager
-##
-##  Documentation: https://github.com/seerr-team/seerr
-##
-###########################################################################
-###########################################################################
-  seerr:
-    image: ghcr.io/seerr-team/seerr:latest
-    container_name: seerr
-    restart: unless-stopped
-    depends_on:
-      gluetun:
-        condition: service_healthy
-        restart: true
-    volumes:
-      - ${FOLDER_FOR_DATA:?err}/seerr:/app/config
-    environment:
-      - TZ=${TIMEZONE:?err}
-    network_mode: "service:gluetun"
-#    ports:
-#      - ${WEBUI_PORT_SEERR:?err}:5055                  # Configured in Gluetun VPN container
-    labels:
-      - traefik.enable=true
-    # ROUTERS
-      - traefik.http.routers.seerr.service=seerr
-      - traefik.http.routers.seerr.rule=Host(`seerr.${CLOUDFLARE_DNS_ZONE:?err}`)
-      - traefik.http.routers.seerr.entrypoints=secureweb
-      - traefik.http.routers.seerr.middlewares=authentik-forwardauth@file,security-headers@file,traefik-bouncer@file
-    # SERVICES
-      - traefik.http.services.seerr.loadbalancer.server.scheme=http
-      - traefik.http.services.seerr.loadbalancer.server.port=5055
-    # MIDDLEWARES
-
-###########################################################################
-###########################################################################
-##
 ##  Docker Compose File: Sonarr (LinuxServer.io)
 ##  Function: Series Library Manager (TV Shows)
 ##
@@ -1757,7 +1709,6 @@ services:
 ###########################################################################
 ###########################################################################
   whisparr:
-    image: ghcr.io/hotio/whisparr:nightly
     image: ghcr.io/hotio/whisparr:nightly
     container_name: whisparr
     restart: unless-stopped
