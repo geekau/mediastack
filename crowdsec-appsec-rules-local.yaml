@@ -1,0 +1,6 @@
+name: local/appsec-rules-local
+default_remediation: ban
+inband_rules:
+ - crowdsecurity/base-config 
+ - crowdsecurity/generic-*
+ - crowdsecurity/vpatch-*

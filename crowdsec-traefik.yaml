@@ -1,0 +1,7 @@
+# ---> Traefik Logs <--- #
+source: file
+poll_without_inotify: true
+filenames:
+  - /logs/traefik/access.log
+labels:
+  type: traefik

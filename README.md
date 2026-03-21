@@ -1048,7 +1048,7 @@ xRYtN-G.frqhgHAC3jqLMbBqVTTRwAs2lWxSTeHr
 The API Key can be stored in the Headplane configuration so its always used without prompting:
 
 ``` bash
-vi headscale-config.yaml
+vi headplane-config.yaml
 ```
 
 Update this section:  
@@ -1177,7 +1177,7 @@ sudo vi traefik-dynamic.yaml
 ```
 
 ``` bash
-./restart
+./restart.sh
 ```
 
 You must go back to [https://app.crowdsec.net/security-engines](https://app.crowdsec.net/security-engines) and approve registration of the new CrowdSec docker engine into the online portal.  
