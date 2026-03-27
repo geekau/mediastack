@@ -1449,8 +1449,9 @@ services:
       - UMASK=${UMASK:?err}
       - TZ=${TIMEZONE:?err}
       - nodeID=Tdarr_Node_1
-      - serverIP=0.0.0.0
+      - serverIP=tdarr
       - serverPort=${TDARR_SERVER_PORT:?err}
+      - NODE_OPTIONS=--dns-result-order=ipv4first
     networks:
       - mediastack
 
