@@ -16,19 +16,19 @@ get_env_value() {
     grep -E "^${VAR_NAME}=" "$ENV_FILE" | cut -d '=' -f2- | sed 's/^[[:space:]]*//; s/[[:space:]]*#.*//' | tr -d '\r' | tail -n 1
 }
 
-FOLDER_FOR_CONFIG=$(get_env_value "FOLDER_FOR_CONFIG")
-FOLDER_FOR_MEDIA=$(get_env_value "FOLDER_FOR_MEDIA")
-FOLDER_FOR_DATA=$(get_env_value "FOLDER_FOR_DATA")
+FOLDER_FOR_MEDIA=$(get_env_value   "FOLDER_FOR_MEDIA")
+FOLDER_FOR_APPDATA=$(get_env_value "FOLDER_FOR_APPDATA")
+FOLDER_FOR_RUNTIME=$(get_env_value "FOLDER_FOR_RUNTIME")
 PUID=$(get_env_value "PUID")
 PGID=$(get_env_value "PGID")
 
 # Validate required vars
 MISSING_VARS=()
-[ -z "$FOLDER_FOR_CONFIG" ] && MISSING_VARS+=("FOLDER_FOR_CONFIG")
-[ -z "$FOLDER_FOR_MEDIA" ]  && MISSING_VARS+=("FOLDER_FOR_MEDIA")
-[ -z "$FOLDER_FOR_DATA" ]   && MISSING_VARS+=("FOLDER_FOR_DATA")
-[ -z "$PUID" ]              && MISSING_VARS+=("PUID")
-[ -z "$PGID" ]              && MISSING_VARS+=("PGID")
+[ -z "$FOLDER_FOR_MEDIA" ]    && MISSING_VARS+=("FOLDER_FOR_MEDIA")
+[ -z "$FOLDER_FOR_APPDATA" ]  && MISSING_VARS+=("FOLDER_FOR_APPDATA")
+[ -z "$FOLDER_FOR_RUNTIME" ]  && MISSING_VARS+=("FOLDER_FOR_RUNTIME")
+[ -z "$PUID" ]                && MISSING_VARS+=("PUID")
+[ -z "$PGID" ]                && MISSING_VARS+=("PGID")
 
 if [ ${#MISSING_VARS[@]} -ne 0 ]; then
     echo "❌ Error: The following required variables are missing or empty in $ENV_FILE:"
@@ -40,9 +40,9 @@ fi
 
 echo
 echo "✅ Found the following variables / values:"
-echo "   - FOLDER_FOR_CONFIG=$FOLDER_FOR_CONFIG"
 echo "   - FOLDER_FOR_MEDIA=$FOLDER_FOR_MEDIA"
-echo "   - FOLDER_FOR_DATA=$FOLDER_FOR_DATA"
+echo "   - FOLDER_FOR_APPDATA=$FOLDER_FOR_APPDATA"
+echo "   - FOLDER_FOR_RUNTIME=$FOLDER_FOR_RUNTIME"
 echo "   - PUID=$PUID"
 echo "   - PGID=$PGID"
 
@@ -63,17 +63,17 @@ echo
 echo Creating folders and setting permissions...
 echo
 
-sudo mkdir -p $FOLDER_FOR_CONFIG
-sudo mkdir -p $FOLDER_FOR_DATA/{authentik/{blueprints,certs,media,templates},bazarr,chromium,crowdsec/{acquis.d,appsec-configs,appsec-rules,data},ddns-updater,filebot,flaresolverr,gluetun,grafana,headplane/data,headscale/data,heimdall,homarr/{configs,data,icons},homepage,jellyfin,seerr,lazylibrarian,lidarr,logs/{unpackerr,traefik},mylar,plex,portainer,postgresql,prometheus,prowlarr,qbittorrent,radarr,sabnzbd,sonarr,tailscale,tdarr/{server,configs,logs},tdarr-node,traefik/letsencrypt,traefik-certs-dumper,unpackerr,valkey,whisparr}
+sudo mkdir -p $FOLDER_FOR_RUNTIME
+sudo mkdir -p $FOLDER_FOR_APPDATA/{authentik/{blueprints,certs,media,templates},bazarr,chromium,crowdsec/{acquis.d,appsec-configs,appsec-rules,data},ddns-updater,filebot,flaresolverr,gluetun,grafana,headplane/data,headscale/data,heimdall,homarr/{configs,data,icons},homepage,jellyfin,seerr,lazylibrarian,lidarr,logs/{unpackerr,traefik},mylar,plex,portainer,postgresql,prometheus,prowlarr,qbittorrent,radarr,sabnzbd,sonarr,tailscale,tdarr/{server,configs,logs},tdarr-node,traefik/letsencrypt,traefik-certs-dumper,unpackerr,valkey,whisparr}
 sudo mkdir -p $FOLDER_FOR_MEDIA/media/{anime,audiobooks,books,comics,movies,music,photos,tv,xxx}
 sudo mkdir -p $FOLDER_FOR_MEDIA/usenet/{anime,audiobooks,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}
 sudo mkdir -p $FOLDER_FOR_MEDIA/torrents/{anime,audiobooks,books,comics,complete,console,incomplete,movies,music,prowlarr,software,tv,xxx}
 sudo mkdir -p $FOLDER_FOR_MEDIA/watch
 sudo mkdir -p $FOLDER_FOR_MEDIA/filebot/{input,output}
-sudo chmod 2775            $FOLDER_FOR_CONFIG
-sudo chown $PUID:$PGID     $FOLDER_FOR_CONFIG
-sudo chmod -R 2775         $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
-sudo chown -R $PUID:$PGID  $FOLDER_FOR_MEDIA $FOLDER_FOR_DATA
+sudo chmod 2775            $FOLDER_FOR_RUNTIME
+sudo chown $PUID:$PGID     $FOLDER_FOR_RUNTIME
+sudo chmod -R 2775         $FOLDER_FOR_MEDIA $FOLDER_FOR_APPDATA
+sudo chown -R $PUID:$PGID  $FOLDER_FOR_MEDIA $FOLDER_FOR_APPDATA
 
 # This checks for missing variables and invalid docker compose configuration
 echo
@@ -89,19 +89,19 @@ fi
 echo
 echo Moving configuration files into application folders...
 echo
-sudo chmod 664                   $FOLDER_FOR_CONFIG/.env $FOLDER_FOR_CONFIG/*yaml
-sudo chown $PUID:$PGID           $FOLDER_FOR_CONFIG/.env $FOLDER_FOR_CONFIG/*yaml $FOLDER_FOR_CONFIG/*sh
-sudo touch                       $FOLDER_FOR_DATA/traefik/letsencrypt/acme.json
-sudo chmod 600                   $FOLDER_FOR_DATA/traefik/letsencrypt/acme.json  && echo "Permissions set to 600 on certs file $FOLDER_FOR_DATA/traefik/letsencrypt/acme.json"
-sudo cp -a headplane-config.yaml $FOLDER_FOR_DATA/headplane/config.yaml          && echo "File headplane-config.yaml copied to $FOLDER_FOR_DATA/headplane/config.yaml"
-sudo cp -a headscale-config.yaml $FOLDER_FOR_DATA/headscale/config.yaml          && echo "File headscale-config.yaml copied to $FOLDER_FOR_DATA/headscale/config.yaml"
-sudo cp -a traefik-static.yaml   $FOLDER_FOR_DATA/traefik/traefik.yaml           && echo "File traefik-static.yaml   copied to $FOLDER_FOR_DATA/traefik/traefik.yaml"
-sudo cp -a traefik-dynamic.yaml  $FOLDER_FOR_DATA/traefik/dynamic.yaml           && echo "File traefik-dynamic.yaml  copied to $FOLDER_FOR_DATA/traefik/dynamic.yaml"
-sudo cp -a traefik-internal.yaml $FOLDER_FOR_DATA/traefik/internal.yaml          && echo "File traefik-internal.yaml copied to $FOLDER_FOR_DATA/traefik/internal.yaml"
-sudo cp -a crowdsec-appsec.yaml  $FOLDER_FOR_DATA/crowdsec/acquis.d/appsec.yaml  && echo "File crowdsec-appsec.yaml  copied to $FOLDER_FOR_DATA/crowdsec/acquis.d/appsec.yaml"
-sudo cp -a crowdsec-traefik.yaml $FOLDER_FOR_DATA/crowdsec/acquis.d/traefik.yaml && echo "File crowdsec-traefik.yaml copied to $FOLDER_FOR_DATA/crowdsec/acquis.d/traefik.yaml"
-sudo cp -a crowdsec-appsec-rules-local.yaml  $FOLDER_FOR_DATA/crowdsec/appsec-configs/appsec-rules-local.yaml    \
-        && echo "File crowdsec-appsec-rules-local.yaml copied to $FOLDER_FOR_DATA/crowdsec/appsec-rules/appsec-rules-local.yaml"
+sudo chmod 664                   $FOLDER_FOR_RUNTIME/.env $FOLDER_FOR_RUNTIME/*yaml
+sudo chown $PUID:$PGID           $FOLDER_FOR_RUNTIME/.env $FOLDER_FOR_RUNTIME/*yaml $FOLDER_FOR_RUNTIME/*sh
+sudo touch                       $FOLDER_FOR_APPDATA/traefik/letsencrypt/acme.json
+sudo chmod 600                   $FOLDER_FOR_APPDATA/traefik/letsencrypt/acme.json  && echo "Permissions set to 600 on certs file $FOLDER_FOR_APPDATA/traefik/letsencrypt/acme.json"
+sudo cp -a headplane-config.yaml $FOLDER_FOR_APPDATA/headplane/config.yaml          && echo "File headplane-config.yaml copied to $FOLDER_FOR_APPDATA/headplane/config.yaml"
+sudo cp -a headscale-config.yaml $FOLDER_FOR_APPDATA/headscale/config.yaml          && echo "File headscale-config.yaml copied to $FOLDER_FOR_APPDATA/headscale/config.yaml"
+sudo cp -a traefik-static.yaml   $FOLDER_FOR_APPDATA/traefik/traefik.yaml           && echo "File traefik-static.yaml   copied to $FOLDER_FOR_APPDATA/traefik/traefik.yaml"
+sudo cp -a traefik-dynamic.yaml  $FOLDER_FOR_APPDATA/traefik/dynamic.yaml           && echo "File traefik-dynamic.yaml  copied to $FOLDER_FOR_APPDATA/traefik/dynamic.yaml"
+sudo cp -a traefik-internal.yaml $FOLDER_FOR_APPDATA/traefik/internal.yaml          && echo "File traefik-internal.yaml copied to $FOLDER_FOR_APPDATA/traefik/internal.yaml"
+sudo cp -a crowdsec-appsec.yaml  $FOLDER_FOR_APPDATA/crowdsec/acquis.d/appsec.yaml  && echo "File crowdsec-appsec.yaml  copied to $FOLDER_FOR_APPDATA/crowdsec/acquis.d/appsec.yaml"
+sudo cp -a crowdsec-traefik.yaml $FOLDER_FOR_APPDATA/crowdsec/acquis.d/traefik.yaml && echo "File crowdsec-traefik.yaml copied to $FOLDER_FOR_APPDATA/crowdsec/acquis.d/traefik.yaml"
+sudo cp -a crowdsec-appsec-rules-local.yaml  $FOLDER_FOR_APPDATA/crowdsec/appsec-configs/appsec-rules-local.yaml    \
+        && echo "File crowdsec-appsec-rules-local.yaml copied to $FOLDER_FOR_APPDATA/crowdsec/appsec-rules/appsec-rules-local.yaml"
 
 echo
 echo "Shutting down all MediaStack containers and removing orphans..."

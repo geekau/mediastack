@@ -1,0 +1,44 @@
+name: Support question
+description: Ask for setup or troubleshooting help
+title: "[Support]: "
+labels: ["support", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only for help requests.
+        If you have found a reproducible defect in MediaStack itself, use the bug report form instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: MediaStack version
+      placeholder: "e.g. 26.3.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment_model
+    attributes:
+      label: Deployment model
+      options:
+        - Full VPN
+        - Mini VPN
+        - No VPN
+        - Custom / modified
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What do you need help with?
+      placeholder: "Describe the problem and what you already tried"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or command output
+      render: shell

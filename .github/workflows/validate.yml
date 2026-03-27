@@ -1,0 +1,75 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: Shell scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Find shell scripts
+        id: find_shell
+        run: |
+          mapfile -t files < <(find . \
+            -type f -name "*.sh" \
+            -not -path "./.git/*" \
+            | sort)
+
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf '%s\n' "${files[@]}" > shell-files.txt
+          echo "found=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run ShellCheck
+        if: steps.find_shell.outputs.found == 'true'
+        run: xargs -r shellcheck < shell-files.txt
+
+  repo-sanity:
+    name: Repository sanity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required repository files
+        run: |
+          test -f README.md
+          test -f CHANGELOG.md
+          test -f .github/PULL_REQUEST_TEMPLATE.md
+          test -f .github/CODEOWNERS
+          test -f .github/ISSUE_TEMPLATE/config.yml
+
+      - name: Install PyYAML
+        run: python3 -m pip install pyyaml
+
+      - name: Check workflow YAML parses
+        run: python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          workflow_dir = Path(".github/workflows")
+          if workflow_dir.exists():
+              for file in workflow_dir.glob("*.y*ml"):
+                  with file.open("r", encoding="utf-8") as f:
+                      yaml.safe_load(f)
+          PY

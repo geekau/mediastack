@@ -1,0 +1,58 @@
+name: Feature request
+description: Propose an improvement or new capability
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      placeholder: "Describe the operational or user problem first"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      placeholder: "Describe the change you want"
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: "What other options or workarounds exist?"
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area affected
+      options:
+        - Compose generation
+        - Networking / VPN
+        - Reverse proxy / Traefik
+        - Authentication / Authentik
+        - Security / CrowdSec
+        - Docs
+        - Scripts / automation
+        - Media applications
+        - Monitoring / observability
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: breaking_change
+    attributes:
+      label: Could this be breaking or high impact?
+      placeholder: "Explain any migration, compatibility, or security concerns"
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmation
+      options:
+        - label: I searched existing issues and feature requests first
+          required: true
+        - label: I understand that maintainers may reject ideas that increase complexity, support burden, or security risk
+          required: true

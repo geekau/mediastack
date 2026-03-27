@@ -1,0 +1,15 @@
+# Default owner
+* @geekau
+
+# GitHub process and repo governance
+/.github/ @geekau
+/CONTRIBUTING.md @geekau
+/SECURITY.md @geekau
+
+# Core deployment and generation logic
+/deploy/ @geekau
+/platform/ @geekau
+/mediastack-os/ @geekau
+
+# Documentation
+/docs/ @geekau

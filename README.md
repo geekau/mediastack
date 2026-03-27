@@ -1,5 +1,15 @@
 # MediaStack Project (Docker)  
 
+<div align="center">
+
+[![GitHub stars](https://img.shields.io/github/stars/geekau/mediastack?style=for-the-badge)](https://github.com/geekau/mediastack/stargazers)
+[![GitHub license](https://img.shields.io/github/license/geekau/mediastack?style=for-the-badge)](https://github.com/geekau/mediastack/blob/master/LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/geekau/mediastack?style=for-the-badge)](https://github.com/geekau/mediastack/commits/master)
+[![GitHub release](https://img.shields.io/github/v/release/geekau/mediastack?style=for-the-badge)](https://github.com/geekau/mediastack/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/geekau/mediastack/total?style=for-the-badge)](https://github.com/geekau/mediastack/releases)
+
+</div>
+
 See you on [Reddit for MediaStack](https://www.reddit.com/r/MediaStack/)  
 
 ## What Applications Are Provided In MediaStack  
@@ -29,8 +39,8 @@ List of Docker applications configured in the MediaStack `docker-compose.yaml` f
 | [Heimdall](https://docs.linuxserver.io/images/docker-heimdall) | Heimdall provides a dashboard to easily access and organise web applications and services |  
 | [Homarr](https://homarr.dev/docs/getting-started/after-the-installation) | Homarr is a self-hosted, customisable dashboard for managing and monitoring your server applications |  
 | [Homepage](https://gethomepage.dev/latest/configs/) | Homepage is an alternate to Heimdall, providing a similar dashboard to easily access and organise web applications and services |  
-| [Huntarr](https://github.com/plexguide/Huntarr.io) | [DEPRECATED] Huntarr is an open-source tool that automates finding missing and upgrading media in *ARR libraries |  
 | [Jellyfin](https://jellyfin.org/docs/general/administration/installing#docker) | Jellyfin is a media server that organises, streams, and manages multimedia content for users |  
+| [LazyLibrarian](https://docs.linuxserver.io/images/docker-lazylibrarian) | LazyLibrarian is a Library Manager, automating the management and meta data for your eBooks and Comic media files |  
 | [Lidarr](https://docs.linuxserver.io/images/docker-lidarr) | Lidarr is a Library Manager, automating the management and meta data for your music media files |  
 | [Mylar](https://github.com/mylar3/mylar3/wiki) | Mylar3 is a Library Manager, automating the management and meta data for your comic media files |  
 | [Plex](https://hub.docker.com/r/linuxserver/plex) | Plex is a media server that organises, streams, and manages multimedia content across devices |  
@@ -40,7 +50,6 @@ List of Docker applications configured in the MediaStack `docker-compose.yaml` f
 | [Prowlarr](https://docs.linuxserver.io/images/docker-prowlarr) | Prowlarr manages and integrates indexers for various media download applications, automating search and download processes |  
 | [qBittorrent](https://docs.linuxserver.io/images/docker-qbittorrent) | qBittorrent is a peer-to-peer file sharing application that facilitates downloading and uploading torrents |  
 | [Radarr](https://docs.linuxserver.io/images/docker-radarr) | Radarr is a Library Manager, automating the management and meta data for your Movie media files |  
-| [Readarr](https://docs.linuxserver.io/images/docker-readarr) | Readarr is a Library Manager, automating the management and meta data for your eBooks and Comic media files |  
 | [SABnzbd](https://docs.linuxserver.io/images/docker-sabnzbd) | SABnzbd is a Usenet newsreader that automates the downloading of binary files from Usenet |  
 | [Seerr](https://github.com/seerr-team/seerr) | Seerr is a request management tool for Jellyfin, enabling users to request and manage media content |  
 | [Sonarr](https://docs.linuxserver.io/images/docker-sonarr) | Sonarr is a Library Manager, automating the management and meta data for your TV Shows (series) media files |  

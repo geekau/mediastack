@@ -1,0 +1,8 @@
+## Syntax:
+
+python split-compose-includes-from-models.py    \
+     --full-source ./generated-models/docker-compose.full-vpn.yaml \
+     --mini-source ./generated-models/docker-compose.mini-vpn.yaml \
+     --no-source   ./generated-models/docker-compose.no-vpn.yaml   \
+     --output-root ./generated-includes         \
+     --force

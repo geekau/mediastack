@@ -1,0 +1,26 @@
+name: Documentation improvement
+description: Report unclear, missing, or outdated documentation
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Documentation page or file
+      placeholder: "e.g. docs/docs/getting-started/installation.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or missing?
+      placeholder: "Describe what is unclear, incorrect, or outdated"
+    validations:
+      required: true
+
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested improvement
+      placeholder: "Describe the better wording, steps, or structure"

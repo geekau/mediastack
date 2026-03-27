@@ -1,0 +1,6 @@
+## Syntax"
+
+python generate-network-models.py \
+  --source mediastack-master-compose.yaml \
+  --output-dir ./generated-models \
+  --force

@@ -1,0 +1,28 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  locale: en_US.UTF-8
+
+  keyboard:
+    layout: us
+    variant: ""
+
+  timezone: Etc/UTC
+
+  identity:
+    realname: MediaStack
+    username: mediastack
+    hostname: mediastack
+    password: "$6$VttIDWH6p4J/mHLi$wTGpOrpLRNXOKCtGdUUfO2LZT5mWWUWANee57r3/rlbZrWtkHXKEs25R4vdfA7bz5hVCYh0RIH.xEdXFiXG3c0"
+
+  storage:
+    layout:
+      name: lvm
+
+  ssh:
+    install-server: true
+    allow-pw: true
+
+  updates: security
+  shutdown: reboot

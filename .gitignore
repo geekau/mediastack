@@ -1,0 +1,155 @@
+# ================================================================
+# MediaStack .gitignore
+#
+# Purpose:
+# - keep live secrets, runtime env files, generated compose outputs,
+#   local staging artefacts, and editor/cache junk out of Git
+# - allow canonical source templates and documentation to stay tracked
+# ================================================================
+
+# ----------------------------------------------------------------
+# Runtime environment files and secrets
+# ----------------------------------------------------------------
+.env
+.env.*
+*.env
+*.env.*
+
+# Allow approved template/example env files
+!*.template.env
+!*.env.template
+!*.env.example
+!templates/docker/mediastack-environment-template.env
+
+# Optional explicit secret/local patterns
+*.local
+*.secret
+*.private
+*.runtime
+secrets/
+
+# ----------------------------------------------------------------
+# Generated compose outputs and local packaging runs
+# ----------------------------------------------------------------
+# Top-level/generated outputs
+/docker-compose.full-vpn.yaml
+/docker-compose.mini-vpn.yaml
+/docker-compose.no-vpn.yaml
+/docker-compose.full-download-vpn.yaml
+/docker-compose.mini-download-vpn.yaml
+/docker-compose.no-download-vpn.yaml
+/docker-compose.*.phase*.yaml
+/docker-compose.*.rendered.yaml
+/*.rendered.yaml
+/*.generated.yaml
+
+# Local generator output folders
+/generated/
+/generated-*/
+/generated-models/
+/generated-phase*/
+/generated-includes/
+/output/
+/dist/
+/tmp/
+/temp/
+/staging/
+/work/
+/workdir/
+
+# Generated include outputs if maintainers test in-place
+/include/
+
+# Build/release artefacts
+/releases/bundles/*
+/releases/manifests/*.generated*
+/releases/notes/*.generated*
+/release-staging/*
+
+# Keep the directories if needed
+!/releases/bundles/.gitkeep
+!/releases/manifests/.gitkeep
+!/releases/notes/.gitkeep
+!/release-staging/.gitkeep
+
+# ----------------------------------------------------------------
+# Python caches and local virtual environments
+# ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+.python-version
+
+# ----------------------------------------------------------------
+# Docs build artefacts
+# ----------------------------------------------------------------
+site/
+/docs/site/
+
+# ----------------------------------------------------------------
+# Logs, reports, and local test output
+# ----------------------------------------------------------------
+*.log
+*.out
+*.err
+*.pid
+*.tmp
+*.bak
+*.orig
+*.rej
+*.retry
+*.report
+
+# ----------------------------------------------------------------
+# OS / desktop junk
+# ----------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+Icon?
+
+# ----------------------------------------------------------------
+# Editor / IDE folders
+# ----------------------------------------------------------------
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# ----------------------------------------------------------------
+# Synology / NAS / SMB indexing junk (harmless but noisy)
+# ----------------------------------------------------------------
+@eaDir/
+#recycle/
+
+# ----------------------------------------------------------------
+# Archives and exported bundles created during testing
+# ----------------------------------------------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# Allow checked-in source/reference docs and helper notes
+!docs/docs/reference/*.txt
+!docs/docs/reference/*.md
+!README.md
+!CHANGELOG.md
+!CONTRIBUTING.md
+!SECURITY.md
+!LICENSE
+!REPO-STRUCTURE.md
+!templates/MASTER-TEMPLATE-GUIDANCE.md

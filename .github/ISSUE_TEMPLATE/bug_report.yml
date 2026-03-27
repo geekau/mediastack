@@ -1,0 +1,104 @@
+name: Bug report
+description: Report a reproducible problem with MediaStack
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before submitting:
+        - confirm you are using a current supported MediaStack release
+        - confirm you have reviewed existing issues
+        - include logs and reproduction steps
+        - do not post secrets, API keys, tokens, or passwords
+
+  - type: input
+    id: version
+    attributes:
+      label: MediaStack version
+      description: Exact release/tag/commit in use
+      placeholder: "e.g. 26.3.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment_model
+    attributes:
+      label: Deployment model
+      options:
+        - Full VPN
+        - Mini VPN
+        - No VPN
+        - Custom / modified
+    validations:
+      required: true
+
+  - type: input
+    id: host_os
+    attributes:
+      label: Host operating system
+      placeholder: "e.g. Ubuntu 26.04 LTS"
+    validations:
+      required: true
+
+  - type: textarea
+    id: changed_defaults
+    attributes:
+      label: What did you change from the default stack?
+      description: List any compose, env, network, reverse proxy, auth, storage, or permission changes
+      placeholder: "Describe all non-default changes"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      placeholder: "Describe the problem clearly"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      placeholder: "Describe expected behaviour"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Fresh install / upgrade from...
+        2. Change ...
+        3. Run ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected_services
+    attributes:
+      label: Affected services
+      placeholder: "e.g. traefik, authentik, crowdsec, gluetun"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or error output
+      description: Paste only the relevant part. Remove secrets.
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmation
+      options:
+        - label: I searched existing issues before opening this report
+          required: true
+        - label: I have removed secrets, tokens, passwords, and private URLs from the report
+          required: true
+        - label: This is a bug report, not a support request
+          required: true
